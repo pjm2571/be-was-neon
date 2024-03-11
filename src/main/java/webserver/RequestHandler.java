@@ -7,6 +7,7 @@ import java.nio.file.Files;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.StringUtils;
 
 public class RequestHandler implements Runnable {
     private static final String STATIC_ROUTE = "src/main/resources/static";
@@ -34,8 +35,7 @@ public class RequestHandler implements Runnable {
 
             logger.debug("request : {}", requestLine);  // HTTP Request의 첫번째 줄은 GET or POST 메소드
 
-            String[] tokens = requestLine.split(" ");  // GET /index.html HTTP/1.1 을 공백 단위로 분리
-            String path = tokens[1];   // 그 중, /index.html 을 가져온다
+            String path = StringUtils.getFirstToken(requestLine);
 
             StringBuilder headers = new StringBuilder(br.readLine());
             while (!headers.toString().isEmpty()) {
