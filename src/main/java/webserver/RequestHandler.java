@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class RequestHandler implements Runnable {
+    private static final String STATIC_ROUTE = "src/main/resources/static";
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
@@ -23,20 +24,29 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
-            BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));  //
+            BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));  // UTF-8로 HTTP Request 받아옴
 
-            String httpRequest = br.readLine();    // GET /index.html HTTP/1.1
+            String requestLine = br.readLine();    // GET /index.html HTTP/1.1
 
-            DataOutputStream dos = new DataOutputStream(out);
-
-            if (httpRequest == null) {
+            if (requestLine == null) {
                 return;
             }
 
-            String[] httpSources = httpRequest.split(" ");  // GET /index.html HTTP/1.1 을 공백 단위로 분리
-            String path = httpSources[1];   // 그 중, /index.html 을 가져온다
+            logger.debug("request : {}", requestLine);  // HTTP Request의 첫번째 줄은 GET or POST 메소드
 
-            byte[] body = Files.readAllBytes(new File("src/main/resources/static" + path).toPath()); // path 설정
+            String[] tokens = requestLine.split(" ");  // GET /index.html HTTP/1.1 을 공백 단위로 분리
+            String path = tokens[1];   // 그 중, /index.html 을 가져온다
+
+            StringBuilder headers = new StringBuilder(br.readLine());
+            while (!headers.toString().isEmpty()) {
+                logger.debug("header : {}", headers);
+                headers.replace(0, headers.length(), "");
+                headers.append(br.readLine());
+            }
+
+            DataOutputStream dos = new DataOutputStream(out);
+
+            byte[] body = Files.readAllBytes(new File(STATIC_ROUTE + path).toPath()); // path 설정
 
             response200Header(dos, body.length);
             responseBody(dos, body);
