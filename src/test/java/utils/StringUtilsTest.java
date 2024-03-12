@@ -66,4 +66,14 @@ public class StringUtilsTest {
         assertThat(StringUtils.getParams(createRequsetLine)).isEqualTo(expectedParams);
     }
 
+    @Test
+    @DisplayName("creaete request의 파라미터들이 들어있는 라인에서, parameter의 value만 추출하는 테스트")
+    void get_paramValues(){
+        String createParamLine = "userId=javajigi";
+
+        String expectedParamValue = "javajigi";
+
+        assertThat(StringUtils.getParamValue(createParamLine)).isEqualTo(expectedParamValue);
+    }
+
 }
