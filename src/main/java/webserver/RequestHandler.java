@@ -33,6 +33,13 @@ public class RequestHandler implements Runnable {
 
             logger.debug("request : {}", requestLine);
 
+            // GET /create?userId=z&name=a&password=b&email=pj%40nave.com HTTP/1.1
+            if (requestLine.contains(CREATE)) {
+                CreateHandler createHandler = new CreateHandler(requestLine);
+                createHandler.create();
+                return;
+            }
+
             String path = StringUtils.getPath(requestLine);
 
             StringBuilder headers = new StringBuilder(br.readLine());   // String 재할당을 쓰지 않기 위해 StringBuilder 사용
