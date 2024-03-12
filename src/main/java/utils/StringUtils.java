@@ -18,6 +18,19 @@ public class StringUtils {
         return tokens[1];
     }
 
+    //create?userId=z&name=a&password=b&email=pj%40nave.com
+    public static String getURL(String inputLine) {
+        String[] tokens = inputLine.split("\\?");   // 물음표를 기준으로 앞의 문자열만 가져온다.
+        return tokens[0];
+    }
+
+    public static String[] getParams(String inputLine) {
+        String paramLine = inputLine.split("\\?")[1]; // 물음표를 기준으로 뒤의 문자열만 가져온다.
+
+        return paramLine.split("&");
+    }
+
+
     public static String getType(String inputLine) {
         String[] tokens = inputLine.split(DOT);
         return tokens[1];
