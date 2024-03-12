@@ -2,8 +2,6 @@ package webserver;
 
 import java.io.*;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 
 import static webserver.ContentType.*;
 import static webserver.Route.*;
@@ -27,7 +25,7 @@ public class RequestHandler implements Runnable {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
-            BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));  // UTF-8로 HTTP Request 받아옴
+            BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));  // UTF-8로 HTTP Request 받아옴
 
             String requestLine = br.readLine();    // GET /index.html HTTP/1.1
 
@@ -46,8 +44,7 @@ public class RequestHandler implements Runnable {
 
             DataOutputStream dos = new DataOutputStream(out);   // 데이터 처리를 위한 DataOutputStream 생성
 
-            byte[] body = Files.readAllBytes(new File(STATIC.getRoute(path)).toPath()); // static 값만 매핑
-            // 추후에, template이 나오면 template으로 변경 가능성 있음
+            byte[] body = readBody(STATIC.getRoute(path));
 
             response200Header(dos, body.length, path);  // output header 작성
 
@@ -56,6 +53,18 @@ public class RequestHandler implements Runnable {
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private byte[] readBody(String path) {
+        File file = new File(path);
+        byte[] body = new byte[(int) file.length()];
+
+        try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file))) {
+            bis.read(body); // 읽어온 바이트 수를 리턴하므로 리턴값을 처리하지 않음
+        } catch (IOException e) {
+            e.printStackTrace(); // 예외 처리
+        }
+        return body;
     }
 
     /* http response 200 : 성공적으로 http request가 수행되었다는 메세지*/
