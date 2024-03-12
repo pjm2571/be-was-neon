@@ -53,3 +53,18 @@ ExecutorService executor = new ThreadPoolExecutor(
         new SynchronousQueue<Runnable>()    // 작업 큐
 );
 ```
+
+---
+
+## 2) ContentType Enum 사용
+![img_1.png](img_1.png)
+## ❌ 문제 상황
+1) enum 클래스의 이름을 CONTENT_TYPE으로 설정
+- 모두 대문자로 하여서.. 그리고 camelCase도 지키지 않았다
+2) enum 클래스에서 단순히 값을 가져와서, content-type과 \r\n을 붙여주어 복잡도만 늘어나는 상황
+
+
+## ⭕ 문제 개선
+1) enum 클래스의 이름을 ContentType으로 변경
+2) enum 클래스에서 type String 값이 들어오면, enum.name으로 조회하여, content-type을 반환하도록 간단히 구현
+️

@@ -2,7 +2,7 @@ package utils;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webserver.CONTENT_TYPE;
+import webserver.ContentType;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -35,7 +35,7 @@ public class StringUtilsTest {
     void get_type_at_requestPath() {
         String requestPath = "/img/ci_chevron-right.svg";
 
-        assertThat(StringUtils.getType(requestPath)).isEqualTo(CONTENT_TYPE.svg.name());
+        assertThat(StringUtils.getType(requestPath)).isEqualTo(ContentType.svg.name());
     }
 
     @Test
@@ -43,7 +43,7 @@ public class StringUtilsTest {
     void get_svg_type_error(){
         String requestPath = "/img/ci_chevron-right.svg";
 
-        assertThat(StringUtils.getType(requestPath)).isNotEqualTo(CONTENT_TYPE.html.name());
+        assertThat(StringUtils.getType(requestPath)).isNotEqualTo(ContentType.html.name());
     }
 
 

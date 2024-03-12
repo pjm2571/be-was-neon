@@ -3,10 +3,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import static webserver.CONTENT_TYPE.*;
+import static webserver.ContentType.*;
 
 /* CONTENT_TYPE Enum 테스트 */
-public class CONTENT_TYPE_Test {
+public class ContentType_Test {
     @Test
     @DisplayName("HTML 콘텐트 타입 정상 리턴 테스트")
     void html_type_test(){

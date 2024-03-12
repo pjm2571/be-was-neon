@@ -5,7 +5,7 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
-import static webserver.CONTENT_TYPE.*;
+import static webserver.ContentType.*;
 import static webserver.ROUTE.*;
 
 import org.slf4j.Logger;
