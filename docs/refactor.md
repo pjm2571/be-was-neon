@@ -84,3 +84,18 @@ ExecutorService executor = new ThreadPoolExecutor(
     - STATIC 경로를 조회
     - TEMPLATE 경로를 조회
     가능하도록 설정
+
+---
+
+## 4) loggerDebug 함수 
+![img_3.png](img_3.png)
+
+## ❌ 문제 상황
+- logger.debug가 중복되는 것 같아 따로 메소드로 분리하였다.
+- 하지만, 메소드로 분리하면서 불필요한 상수 
+  - REQUEST, HEADER 와 같은 상수들이 필요하게 되었다.
+> 클린 코드를 지향하는..것? 처럼 보이는 코드라고 생각한다.. 
+
+## ⭕ 문제 개선
+- loggerDebug 메소드를 삭제
+- logger.debug 메소드를 통해 로그를 출력하도록 개선
