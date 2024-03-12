@@ -6,7 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
 import static webserver.ContentType.*;
-import static webserver.ROUTE.*;
+import static webserver.Route.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

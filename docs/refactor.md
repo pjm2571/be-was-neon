@@ -68,3 +68,19 @@ ExecutorService executor = new ThreadPoolExecutor(
 1) enum 클래스의 이름을 ContentType으로 변경
 2) enum 클래스에서 type String 값이 들어오면, enum.name으로 조회하여, content-type을 반환하도록 간단히 구현
 ️
+## 3) Route Enum 수정
+![img_2.png](img_2.png)
+
+## ❌ 문제 상황
+1) enum 클래스의 이름을 ROUTE로 설정
+- 모두 대문자로 하여서.. 그리고 camelCase도 지키지 않았다
+2) STATIC 내부의 값들을 전부 매핑해줄 필요가 없다.
+   - Honux의 피드백처럼, STATIC 내부의 경로는 모두 상대 경로로 동작하기 때문에
+   - STATIC만 넘겨주면 동작 가능
+
+## ⭕ 문제 개선
+1) enum 클래스의 이름을 Route로 변경
+2) Route Enum의 값을 STATIC, TEMPLATE으로 변경
+    - STATIC 경로를 조회
+    - TEMPLATE 경로를 조회
+    가능하도록 설정
