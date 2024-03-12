@@ -46,6 +46,24 @@ public class StringUtilsTest {
         assertThat(StringUtils.getType(requestPath)).isNotEqualTo(ContentType.html.name());
     }
 
+    @Test
+    @DisplayName("create request의 url 파싱 테스트")
+    void create_request_url_parsing(){
+        String createRequsetLine = "/create?userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net";
 
+        String expectedURL = "/create";
+
+        assertThat(StringUtils.getURL(createRequsetLine)).isEqualTo(expectedURL);
+    }
+
+    @Test
+    @DisplayName("create request의 인자 파싱 테스트")
+    void create_request_params_parsing(){
+        String createRequsetLine = "/create?userId=javajigi&password=password&name=%EB%B0%95%EC%9E%AC%EC%84%B1&email=javajigi%40slipp.net";
+
+        String[] expectedParams = {"userId=javajigi", "password=password", "name=%EB%B0%95%EC%9E%AC%EC%84%B1", "email=javajigi%40slipp.net"};
+
+        assertThat(StringUtils.getParams(createRequsetLine)).isEqualTo(expectedParams);
+    }
 
 }
