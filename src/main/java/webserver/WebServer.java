@@ -2,8 +2,7 @@ package webserver;
 
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +10,10 @@ import org.slf4j.LoggerFactory;
 public class WebServer {
     private static final Logger logger = LoggerFactory.getLogger(WebServer.class);
     private static final int DEFAULT_PORT = 8080;
-    private static final int THREAD_POOL_SIZE = 100;
+    private static final int CORE_THREAD_SIZE = 3;
+    private static final int MAX_THREAD_SIZE = 100;
+    private static final long REST_TIME = 120;
+
 
     public static void main(String args[]) throws Exception {
         int port = 0;
@@ -25,8 +27,13 @@ public class WebServer {
         try (ServerSocket listenSocket = new ServerSocket(port)) {
             logger.info("Web Application Server started {} port.", port);
 
-            // 접속할 수 있는 스레드의 개수를 100개로 제한하여 생성한다.
-            ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+            ExecutorService executor = new ThreadPoolExecutor(
+                    CORE_THREAD_SIZE,          // 코어 스레드 개수
+                    MAX_THREAD_SIZE,        // 최대 스레드 개수
+                    REST_TIME,       // 놀고 있는 시간
+                    TimeUnit.SECONDS,   // 놀고 있는 시간 단위
+                    new SynchronousQueue<Runnable>()    // 작업 큐
+            );
 
             // 클라이언트가 연결될때까지 대기한다.
             Socket connection;
