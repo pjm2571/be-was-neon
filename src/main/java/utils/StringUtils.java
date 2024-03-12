@@ -28,7 +28,8 @@ public class StringUtils {
     }
 
     public static String[] getParams(String inputLine) {
-        String paramLine = inputLine.split(QUESTION)[1]; // 물음표를 기준으로 뒤의 문자열만 가져온다.
+        String path = getPath(inputLine);
+        String paramLine = path.split(QUESTION)[1]; // 물음표를 기준으로 뒤의 문자열만 가져온다.
         return paramLine.split(AND);
     }
 
