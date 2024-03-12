@@ -13,6 +13,7 @@ import utils.StringUtils;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+    private static final String CREATE = "create";
     private Socket connection;
 
     public RequestHandler(Socket connectionSocket) {
@@ -20,8 +21,7 @@ public class RequestHandler implements Runnable {
     }
 
     public void run() {
-        logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
-                connection.getPort());
+
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
@@ -31,31 +31,37 @@ public class RequestHandler implements Runnable {
 
             if (requestLine == null) return;    // http request line이 null 이라면 스레드 종료
 
-            logger.debug("request : {}", requestLine);
-
-            // GET /create?userId=z&name=a&password=b&email=pj%40nave.com HTTP/1.1
-            if (requestLine.contains(CREATE)) {
-                CreateHandler createHandler = new CreateHandler(requestLine);
-                createHandler.create();
-                return;
+            if (requestLine.contains(html.name())) {
+                logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
+                        connection.getPort());
             }
+
+            logger.debug("request : {}", requestLine);
 
             String path = StringUtils.getPath(requestLine);
 
+
+            if (requestLine.contains(CREATE)) {
+                CreateHandler createHandler = new CreateHandler(requestLine);
+                createHandler.create();
+
+                ResponseHandler responseHandler = new ResponseHandler(out, path);
+                responseHandler.response302Header();
+
+                return;
+            }
+
             StringBuilder headers = new StringBuilder(br.readLine());   // String 재할당을 쓰지 않기 위해 StringBuilder 사용
             while (!headers.toString().isEmpty()) {
-                logger.debug("header : {}", headers.toString());
+//                logger.debug("header : {}", headers.toString());
                 headers.replace(0, headers.length(), "");     // StringBuilder의 모든 내용을 ""으로 초기화 -> new StringBuilder보다 낫다.
                 headers.append(br.readLine());  // 다음 값 매핑
             }
 
-            DataOutputStream dos = new DataOutputStream(out);   // 데이터 처리를 위한 DataOutputStream 생성
+            ResponseHandler responseHandler = new ResponseHandler(out, path);
 
-            byte[] body = readBody(STATIC.getRoute(path));
-
-            response200Header(dos, body.length, path);  // output header 작성
-
-            responseBody(dos, body);    // output body 작성
+            responseHandler.response200Header();
+            responseHandler.responseBody();
 
         } catch (IOException e) {
             logger.error(e.getMessage());
