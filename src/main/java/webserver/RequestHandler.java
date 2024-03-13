@@ -34,6 +34,13 @@ public class RequestHandler implements Runnable {
 
             Request request = new Request(requestLine, getRequestHeaders(br));
 
+//            if (in.available() > 0) {
+//                System.out.println("avail!");
+//            } else {
+//                System.out.println("not avail!");
+//            }
+
+
             if (requestLine.contains(CREATE)) {
                 CreateHandler createHandler = new CreateHandler(request.getRequestTarget());
                 createHandler.create();
@@ -43,7 +50,6 @@ public class RequestHandler implements Runnable {
 
                 return;
             }
-
 
             ResponseHandler responseHandler = new ResponseHandler(out, request.getRequestTarget());
 
