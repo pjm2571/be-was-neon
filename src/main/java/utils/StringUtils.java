@@ -1,37 +1,80 @@
 package utils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class StringUtils {
     private StringUtils() {
-
     }
 
-    private static final String ERROR = "[ERROR]";
-    private static final String REQUEST_ERROR = ERROR + " 올바르지 않은 형식의 Request 입니다.";
     public static final String SPACE = " ";
     public static final String DOT = "\\.";
     public static final String QUESTION = "\\?";
     public static final String AND = "&";
     public static final String EQUAL = "=";
 
-    public static String getPath(String inputLine) {
-        String[] tokens = inputLine.split(SPACE);
-        if (tokens.length != 3) {
-            throw new IllegalArgumentException(REQUEST_ERROR);
-        }
-        return tokens[1];
-    }
+    /* -------------------------------------- Request Line 파싱하는 메소드 ------------------------------- */
 
-    //create?userId=z&name=a&password=b&email=pj%40nave.com
-    public static String getURL(String inputLine) {
-        String[] tokens = inputLine.split(QUESTION);   // 물음표를 기준으로 앞의 문자열만 가져온다.
+    /* 1) GET or POST 와 같은 메소드를 추출하는 메소드*/
+    public static String getHttpMethod(String requestLine) {
+        String[] tokens = requestLine.split(SPACE);
         return tokens[0];
     }
 
-    public static String[] getParams(String inputLine) {
-        String path = getPath(inputLine);
-        String paramLine = path.split(QUESTION)[1]; // 물음표를 기준으로 뒤의 문자열만 가져온다.
-        return paramLine.split(AND);
+    /* /create, /index.html 와 같은 requestTarget을 추출하는 메소드 */
+    public static String getRequestTarget(String requestLine) {
+        String[] tokens = requestLine.split(SPACE);
+        return tokens[1];
     }
+
+    /* HTTP/1.1 와 같은 http 버전을 추출하는 메소드 */
+    public static String getHttpVersion(String requestLine) {
+        String[] tokens = requestLine.split(SPACE);
+        return tokens[2];
+    }
+
+    /* ---------------------------------------------- END ---------------------------------------------- */
+
+
+
+    /* -------------------------------------- Request Target 파싱하는 메소드 ------------------------------- */
+
+
+    /* requestTarget에서 url을 추출하는 메소드 */
+    public static String getRequestUrl(String requestTarget) {
+        String[] tokens = requestTarget.split(QUESTION);
+        return tokens[0];
+    }
+
+    /* requestTarget에서 parameter들을 가져오는 메소드 */
+    public static String[] getRequestParams(String requestTarget) {
+        String[] tokens = requestTarget.split(QUESTION);
+
+        String params = tokens[1];
+
+        return params.split(AND);
+    }
+
+    /* parameter들의 집합에서, key : value 쌍을 추출하는 메소드 */
+    public static Map<String, String> getParams(String requestTarget) {
+        /* name : zoonmy
+         email : zoonmy@lucas.com
+         을 담기위한 map 생성
+         Key : name, Value : value */
+        Map<String, String> params = new HashMap<>();
+
+        String[] paramComponents = getRequestParams(requestTarget);
+
+        for (int i = 0; i < paramComponents.length; i++) {
+            int subIndex = paramComponents[i].indexOf(EQUAL);
+            params.put(paramComponents[i].substring(0, subIndex), paramComponents[i].substring(subIndex + 1));
+        }
+
+        return params;
+    }
+
+
+    /* ---------------------------------------------- END ---------------------------------------------- */
 
 
     public static String getType(String inputLine) {
@@ -39,8 +82,4 @@ public class StringUtils {
         return tokens[1];
     }
 
-    public static String getParamValue(String inputParamLine) {
-        String[] tokens = inputParamLine.split(EQUAL);
-        return tokens[1];
-    }
 }
