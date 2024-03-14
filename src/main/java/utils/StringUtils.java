@@ -73,13 +73,13 @@ public class StringUtils {
         return params;
     }
 
+    public static String getType(String requestTarget) {
+        String[] tokens = requestTarget.split(DOT); // .을 기준으로 자른다.
+        return tokens[tokens.length - 1];           // 맨 마지막 값을 가져온다. 그것이 type!
+    }
+
 
     /* ---------------------------------------------- END ---------------------------------------------- */
 
-
-    public static String getType(String inputLine) {
-        String[] tokens = inputLine.split(DOT);
-        return tokens[1];
-    }
 
 }

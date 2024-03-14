@@ -14,7 +14,7 @@ import utils.StringUtils;
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
     private static final String ENCODING = "UTF-8";
-    private static final String CREATE = "create";
+    private static final String CREATE = "/create";
     private Socket connection;
 
     public RequestHandler(Socket connectionSocket) {
@@ -34,27 +34,16 @@ public class RequestHandler implements Runnable {
 
             Request request = new Request(requestLine, getRequestHeaders(br));
 
-//            if (in.available() > 0) {
-//                System.out.println("avail!");
-//            } else {
-//                System.out.println("not avail!");
-//            }
-
-
-            if (requestLine.contains(CREATE)) {
+            if (request.getRequestTarget().startsWith(CREATE)) {
                 CreateHandler createHandler = new CreateHandler(request.getRequestTarget());
                 createHandler.create();
-
-                ResponseHandler responseHandler = new ResponseHandler(out, request.getRequestTarget());
-                responseHandler.response302Header();
-
-                return;
             }
 
-            ResponseHandler responseHandler = new ResponseHandler(out, request.getRequestTarget());
+            Response response = new Response(request);
 
-            responseHandler.response200Header();
-            responseHandler.responseBody();
+            ResponseHandler responseHandler = new ResponseHandler(out, response);
+
+            responseHandler.httpResponse();
 
         } catch (IOException e) {
             logger.error(e.getMessage());
