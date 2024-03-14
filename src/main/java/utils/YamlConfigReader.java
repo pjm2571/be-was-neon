@@ -9,8 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-public class YalmConfigReader {
-    private static final Logger logger = LoggerFactory.getLogger(YalmConfigReader.class);
+public class YamlConfigReader {
+    private static final Logger logger = LoggerFactory.getLogger(YamlConfigReader.class);
 
     public static String loadStaticSourcePathFromYaml() {
         try (InputStream input = new FileInputStream("config.yaml")) {

@@ -2,19 +2,17 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.Yaml;
 import utils.StringUtils;
-import utils.YalmConfigReader;
+import utils.YamlConfigReader;
 
 import java.io.*;
-import java.util.Map;
 
 import static webserver.ContentType.getContentType;
 
 public class Response {
     private static final Logger logger = LoggerFactory.getLogger(Response.class);
 
-    private final static String STATIC = YalmConfigReader.loadStaticSourcePathFromYaml();
+    private final static String STATIC = YamlConfigReader.loadStaticSourcePathFromYaml();
     private static final String CREATE = "/create";
 
     private Request request;
