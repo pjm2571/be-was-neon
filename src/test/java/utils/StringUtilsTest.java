@@ -2,9 +2,6 @@ package utils;
 
 import org.junit.jupiter.api.*;
 
-import webserver.ContentType;
-
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.*;

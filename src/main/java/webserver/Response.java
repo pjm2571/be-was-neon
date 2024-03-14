@@ -12,7 +12,6 @@ public class Response {
     private static final Logger logger = LoggerFactory.getLogger(Response.class);
 
     private final static String STATIC = "src/main/resources/static";
-
     private static final String CREATE = "/create";
 
     private Request request;
