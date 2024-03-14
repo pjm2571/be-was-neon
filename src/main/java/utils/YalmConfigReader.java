@@ -3,7 +3,6 @@ package utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
-import webserver.Response;
 
 import java.io.FileInputStream;
 import java.io.IOException;
