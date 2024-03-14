@@ -6,10 +6,11 @@ import java.util.concurrent.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.YalmConfigReader;
 
 public class WebServer {
     private static final Logger logger = LoggerFactory.getLogger(WebServer.class);
-    private static final int DEFAULT_PORT = 8080;
+    private static final int DEFAULT_PORT = YalmConfigReader.loadPortFromYaml();
     private static final int CORE_THREAD_SIZE = 3;
     private static final int MAX_THREAD_SIZE = 100;
     private static final long REST_TIME = 120;
