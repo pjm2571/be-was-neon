@@ -8,11 +8,28 @@
 
 # 🖥️ 프로그램 동작
 
-## 1) WebServer시작
-- ```ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);```
-  - ```POOL_SIZE = 100```
-- 100개의 스레드를 가질 수 있는 스레드 풀을 생성한다.
+## 포트번호, STATIC 경로 처리
+- ```config.yaml```파일을 통해 static source를 불러온다.
+- ```config.yaml```파일을 통해 port 번호를 불러온다.
 
-## 2) Requset Handler 수행
-- 클라이언트 소켓을 생성하여, 입력된 request에 대해 소켓을 연결한다.
-- ```static``` 경로에서의 파일 조회만 성공한다.
+## ```localhost:8080/index.html```
+- STATIC/index.html 파일을 불러온다.
+
+### ```회원가입 버튼```을 통해 회원가입 페이지로 이동이 가능하다.
+
+## ```localhost:8080/registration/index.html```
+- STATIC/registration/index.html 파일을 불러온다.
+
+### 회원정보를 입력하여 회원가입이 가능하다
+
+
+## ```localhost:8080/registration/create```
+- 입력된 정보값을 바탕으로 User를 생성한다.
+- User가 생성되면, main화면으로 돌아간다.
+
+
+## ```localhost:8080/step3test/index.html```
+- step-3의 파일들 로딩을 테스트하기 위한 페이지
+
+- ```jpg```, ```jpeg```, ```png```, ```js```파일을 불러오는 지 확인한다.
+  - button을 클릭하여 js파일이 잘 동작하는지 확인한다.
