@@ -63,10 +63,10 @@ public class Response {
         try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file))) {
             bis.read(body); // 읽어온 바이트 수를 리턴하므로 리턴값을 처리하지 않음
         } catch (IOException e) {
-            e.printStackTrace(); // 예외 처리
+            logger.error(e.getMessage());
+            return "<h1>페이지 없음!</h1>".getBytes();   // 404 error처리..?
         }
         return body;
     }
-
 
 }

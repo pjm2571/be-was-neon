@@ -1,5 +1,8 @@
 package utils;
 
+import webserver.ContentType;
+
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,9 +12,10 @@ public class StringUtils {
 
     public static final String SPACE = " ";
     public static final String DOT = "\\.";
-    public static final String QUESTION = "\\?";
     public static final String AND = "&";
     public static final String EQUAL = "=";
+    public static final String DEFAULT_FILE = "/index.html";
+    public static final String QUERY_SEQUENCE = "\\?";
 
     /* -------------------------------------- Request Line 파싱하는 메소드 ------------------------------- */
 
@@ -24,8 +28,36 @@ public class StringUtils {
     /* /create, /index.html 와 같은 requestTarget을 추출하는 메소드 */
     public static String getRequestTarget(String requestLine) {
         String[] tokens = requestLine.split(SPACE);
-        return tokens[1];
+        String requestTarget = tokens[1];
+        if (isURL(requestTarget)) {
+            return requestTarget + DEFAULT_FILE;
+        }
+        return requestTarget;
     }
+
+    // RequestTarget이 URL인지 확인하는 함수
+    private static boolean isURL(String requestTarget) {
+        if (isQueryType(requestTarget)) { // GET 쿼리라면, false
+            return false;
+        }
+
+        if (isContentType(requestTarget)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private static boolean isQueryType(String requestTarget) {
+        CharSequence querySequence = String.valueOf(QUERY_SEQUENCE.charAt(1));
+        return requestTarget.contains(querySequence);
+    }
+
+    private static boolean isContentType(String requestTarget) {
+        return Arrays.stream(ContentType.values())
+                .anyMatch(contentType -> contentType.name().equals(getType(requestTarget)));
+    }
+
 
     /* HTTP/1.1 와 같은 http 버전을 추출하는 메소드 */
     public static String getHttpVersion(String requestLine) {
@@ -42,13 +74,13 @@ public class StringUtils {
 
     /* requestTarget에서 url을 추출하는 메소드 */
     public static String getRequestUrl(String requestTarget) {
-        String[] tokens = requestTarget.split(QUESTION);
+        String[] tokens = requestTarget.split(QUERY_SEQUENCE);
         return tokens[0];
     }
 
     /* requestTarget에서 parameter들을 가져오는 메소드 */
     public static String[] getRequestParams(String requestTarget) {
-        String[] tokens = requestTarget.split(QUESTION);
+        String[] tokens = requestTarget.split(QUERY_SEQUENCE);
 
         String params = tokens[1];
 
