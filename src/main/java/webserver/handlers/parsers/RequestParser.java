@@ -38,8 +38,15 @@ public class RequestParser {
 
     private String parseUrl(String startLine) {
         StringBuilder sb = new StringBuilder();
+
         sb.append(RequestUtils.getHttpMethod(startLine)).append(" ");
-        sb.append(RequestUtils.getRequestTarget(startLine)).append("/index.html");
+        sb.append(RequestUtils.getRequestTarget(startLine));
+
+        if (!RequestUtils.getRequestTarget(startLine).endsWith("/")) {
+            sb.append("/");
+        }
+
+        sb.append("index.html").append(" ");
         sb.append(RequestUtils.getHttpVersion(startLine));
         return sb.toString();
     }
