@@ -3,14 +3,11 @@ package config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
-import webserver.CreateHandler;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
-import java.util.Objects;
 
 public class Config {
     private static final Logger logger = LoggerFactory.getLogger(Config.class);
