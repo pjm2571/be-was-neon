@@ -1,2 +1,4 @@
+
+encoding: UTF-8
 port: 8080
-staticSourcePath: ./src/main/resources/static
+static_route: ./src/main/resources/static

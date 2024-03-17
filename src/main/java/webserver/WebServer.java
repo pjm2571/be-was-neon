@@ -1,25 +1,33 @@
 package webserver;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.*;
 
+import config.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.YamlConfigReader;
 
 public class WebServer {
     private static final Logger logger = LoggerFactory.getLogger(WebServer.class);
-    private static final int DEFAULT_PORT = YamlConfigReader.loadPortFromYaml();
     private static final int CORE_THREAD_SIZE = 3;
     private static final int MAX_THREAD_SIZE = 100;
     private static final long REST_TIME = 120;
 
 
     public static void main(String args[]) throws Exception {
+        Config config;
+
+        try {
+            config = new Config();
+        } catch (Exception e) {
+            return;
+        }
+
         int port = 0;
         if (args == null || args.length == 0) {
-            port = DEFAULT_PORT;
+            port = config.getPort();
         } else {
             port = Integer.parseInt(args[0]);
         }

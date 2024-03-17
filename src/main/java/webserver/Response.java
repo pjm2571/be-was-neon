@@ -3,7 +3,6 @@ package webserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.StringUtils;
-import utils.YamlConfigReader;
 
 import java.io.*;
 
@@ -11,8 +10,7 @@ import static webserver.ContentType.getContentType;
 
 public class Response {
     private static final Logger logger = LoggerFactory.getLogger(Response.class);
-
-    private final static String STATIC = YamlConfigReader.loadStaticSourcePathFromYaml();
+    private final static String STATIC = "./src/main/resources/static"; // 수정 필요!
     private static final String CREATE = "/create";
 
     private Request request;
