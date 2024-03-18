@@ -13,7 +13,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class RequestReader {
-    private static final Logger logger = LoggerFactory.getLogger(RequestReader.class);
     private BufferedReader requestReader;
 
     public RequestReader(InputStream inputStream, Config config) {

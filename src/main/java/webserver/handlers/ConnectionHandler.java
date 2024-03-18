@@ -28,9 +28,10 @@ public class ConnectionHandler implements Runnable {
         // Request Handler 생성
         try {
             RequestHandler requestHandler = new RequestHandler(connection.getInputStream(), config);
-            HttpRequest httpRequest = requestHandler.getHttpRequest();
-//            ResponseHandler responseHandler = new ResponseHandler(connection.getOutputStream(), config);
 
+            HttpRequest httpRequest = requestHandler.getHttpRequest();
+
+            ResponseHandler responseHandler = new ResponseHandler(connection.getOutputStream(), httpRequest.sendResponse(), config);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

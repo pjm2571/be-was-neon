@@ -2,6 +2,7 @@ package webserver.handlers.request;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.handlers.response.HttpResponse;
 
 import java.util.Map;
 
@@ -21,4 +22,6 @@ public abstract class HttpRequest {
         headers.forEach((key, value) -> logger.debug("Header : {} : {}", key, value));
         this.headers = headers;
     }
+
+    public abstract HttpResponse sendResponse();
 }
