@@ -4,9 +4,12 @@ import java.io.IOException;
 import java.net.Socket;
 
 import config.Config;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import webserver.handlers.request.HttpRequest;
 
 public class ConnectionHandler implements Runnable {
+    private static final Logger logger = LoggerFactory.getLogger(ConnectionHandler.class);
 
     private Socket connection;
     private Config config;
@@ -19,6 +22,8 @@ public class ConnectionHandler implements Runnable {
 
     @Override
     public void run() {
+        logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
+                connection.getPort());
         // Request Handler 생성
         try {
             RequestHandler requestHandler = new RequestHandler(connection.getInputStream(), config);
