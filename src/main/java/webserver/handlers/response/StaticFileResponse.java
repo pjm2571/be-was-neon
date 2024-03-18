@@ -1,7 +1,8 @@
 package webserver.handlers.response;
 
-import webserver.handlers.request.HttpRequest;
-
 public class StaticFileResponse extends HttpResponse {
 
+    public StaticFileResponse(String requestTarget) {
+        super(requestTarget);
+    }
 }

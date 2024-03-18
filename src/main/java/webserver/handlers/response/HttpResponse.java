@@ -2,17 +2,18 @@ package webserver.handlers.response;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.handlers.request.HttpRequest;
 
 import java.util.Map;
 
 public abstract class HttpResponse {
     private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
 
+    private String requestTarget;
     private String startLine;
     private Map<String, String> headers;
 
-    HttpResponse() {
+    public HttpResponse(String requestTarget) {
+        this.requestTarget = requestTarget;
         logger.debug("Response Object : {}", this.getClass().getSimpleName());
     }
 

@@ -1,5 +1,6 @@
 package webserver.handlers.request;
 
+import utils.RequestUtils;
 import webserver.handlers.response.HttpResponse;
 import webserver.handlers.response.StaticFileResponse;
 
@@ -10,7 +11,8 @@ public class StaticFileRequest extends HttpRequest {
 
     @Override
     public HttpResponse sendResponse() {
-        return new StaticFileResponse();
+        String requestTarget = RequestUtils.getRequestTarget(startLine);
+        return new StaticFileResponse(requestTarget);
     }
 
 }

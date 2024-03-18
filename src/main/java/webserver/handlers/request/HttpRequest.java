@@ -9,8 +9,8 @@ import java.util.Map;
 public abstract class HttpRequest {
     private static final Logger logger = LoggerFactory.getLogger(HttpRequest.class);
 
-    private String startLine;
-    protected Map<String, String> headers;
+    protected String startLine;
+    private Map<String, String> headers;
 
     HttpRequest(String startLine) {
         this.startLine = startLine;

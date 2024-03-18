@@ -1,5 +1,6 @@
 package webserver.handlers.request;
 
+import utils.RequestUtils;
 import webserver.handlers.response.HttpResponse;
 import webserver.handlers.response.QueryResponse;
 
@@ -10,6 +11,7 @@ public class QueryRequest extends HttpRequest {
 
     @Override
     public HttpResponse sendResponse() {
-        return new QueryResponse();
+        String requestTarget = RequestUtils.getRequestTarget(startLine);
+        return new QueryResponse(requestTarget);
     }
 }
