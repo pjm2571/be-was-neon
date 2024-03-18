@@ -46,7 +46,6 @@ public class RequestReader {
 
         StringBuilder headerLine = new StringBuilder(requestReader.readLine());
         while (!headerLine.toString().isEmpty()) {
-            logger.debug("Request Header : {} : {}", HeaderUtils.getHeaderKey(headerLine.toString()), HeaderUtils.getHeaderValue(headerLine.toString()));
             headers.put(HeaderUtils.getHeaderKey(headerLine.toString()), HeaderUtils.getHeaderValue(headerLine.toString()));
             headerLine.replace(0, headerLine.length(), "");
             headerLine.append(requestReader.readLine());

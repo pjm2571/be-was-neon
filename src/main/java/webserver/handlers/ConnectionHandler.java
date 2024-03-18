@@ -7,6 +7,7 @@ import config.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.handlers.request.HttpRequest;
+import webserver.handlers.request.QueryRequest;
 
 public class ConnectionHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(ConnectionHandler.class);
@@ -28,7 +29,6 @@ public class ConnectionHandler implements Runnable {
         try {
             RequestHandler requestHandler = new RequestHandler(connection.getInputStream(), config);
             HttpRequest httpRequest = requestHandler.getHttpRequest();
-
 //            ResponseHandler responseHandler = new ResponseHandler(connection.getOutputStream(), config);
 
         } catch (IOException e) {
