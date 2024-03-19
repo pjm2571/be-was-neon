@@ -8,6 +8,7 @@ import java.util.Map;
 
 public abstract class HttpResponse {
     private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
+    private static final String CSRF = "\r\n";
 
     private String requestTarget;
 
@@ -17,7 +18,6 @@ public abstract class HttpResponse {
 
     public HttpResponse(String requestTarget) {
         this.requestTarget = requestTarget;
-        logger.debug("Response Object : {}", this.getClass().getSimpleName());
     }
 
     public String getRequestTarget() {
@@ -41,10 +41,10 @@ public abstract class HttpResponse {
     }
 
     public void setResponseHeader(String mimeType, int bodyLength) {
-        this.responseHeader = "Content-Type: " + mimeType + "\r\n" + "Content-Length: " + bodyLength + "\r\n" + "\r\n";
+        this.responseHeader = "Content-Type: " + mimeType + CSRF + "Content-Length: " + bodyLength + CSRF + CSRF;
     }
 
     public void setStartLine(StatusCode statusCode) {
-        this.startLine = "HTTP/1.1 " + statusCode.getCode() + " " + statusCode.getDescription();
+        this.startLine = "HTTP/1.1 " + statusCode.getCode() + " " + statusCode.getDescription() + CSRF;
     }
 }
