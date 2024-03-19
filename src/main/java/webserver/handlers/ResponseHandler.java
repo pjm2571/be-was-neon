@@ -3,11 +3,9 @@ package webserver.handlers;
 import config.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.handlers.request.HttpRequest;
 import webserver.handlers.response.HttpResponse;
 import webserver.handlers.response.QueryResponse;
 import webserver.handlers.response.StaticFileResponse;
-import webserver.handlers.writers.ResponseWriter;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -30,8 +28,8 @@ public class ResponseHandler {
 
     public void handleResponse() {
         if (httpResponse instanceof QueryResponse) {
-//            QueryHandler queryHandler = new QueryHandler(httpResponse, config);
-//            queryHandler.handleResponse();
+            QueryHandler queryHandler = new QueryHandler(dos, httpResponse, config);
+            queryHandler.handleResponse();
         }
         if (httpResponse instanceof StaticFileResponse) {
             StaticFileHandler staticFileHandler = new StaticFileHandler(dos, httpResponse, config);

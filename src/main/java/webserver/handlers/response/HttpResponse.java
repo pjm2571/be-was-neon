@@ -44,6 +44,10 @@ public abstract class HttpResponse {
         this.responseHeader = "Content-Type: " + mimeType + CSRF + "Content-Length: " + bodyLength + CSRF + CSRF;
     }
 
+    public void setResponseHeader(){
+        this.responseHeader = "Location: " + "/index.html" + CSRF + CSRF;
+    }
+
     public void setStartLine(StatusCode statusCode) {
         this.startLine = "HTTP/1.1 " + statusCode.getCode() + " " + statusCode.getDescription() + CSRF;
     }

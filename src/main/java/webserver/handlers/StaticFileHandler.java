@@ -8,12 +8,10 @@ import webserver.handlers.response.HttpResponse;
 import webserver.types.ContentType;
 
 import java.io.*;
-import java.util.Base64;
 import java.util.stream.Stream;
 
 public class StaticFileHandler {
     private static final Logger logger = LoggerFactory.getLogger(StaticFileHandler.class);
-
 
     private DataOutputStream dos;
     private HttpResponse httpResponse;
