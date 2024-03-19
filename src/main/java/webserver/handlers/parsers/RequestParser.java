@@ -3,7 +3,6 @@ package webserver.handlers.parsers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.RequestUtils;
-import webserver.handlers.readers.RequestReader;
 import webserver.handlers.request.HttpRequest;
 import webserver.handlers.request.QueryRequest;
 import webserver.handlers.request.StaticFileRequest;
@@ -17,6 +16,9 @@ public class RequestParser {
     }
 
     public HttpRequest extractRequest() {
+        if (startLine == null) {
+            return null;
+        }
         // requestTarget을 가져온다.
         String requestTarget = RequestUtils.getRequestTarget(startLine);
 

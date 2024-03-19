@@ -11,7 +11,7 @@ public class UrlRequest extends HttpRequest {
 
     @Override
     public HttpResponse sendResponse() {
-        String requestTarget = RequestUtils.getRequestTarget(startLine);
+        String requestTarget = RequestUtils.getRequestTarget(startLine) + "/index.html";
         return new StaticFileResponse(requestTarget);
     }
 

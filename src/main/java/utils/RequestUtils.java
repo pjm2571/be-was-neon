@@ -46,7 +46,7 @@ public class RequestUtils {
         return !isStaticFile(requestTarget) && !isQueryRequest(requestTarget);
     }
 
-    private static String getExtension(String requestTarget) {
+    public static String getExtension(String requestTarget) {
         String[] tokens = requestTarget.split(DOT);
         return tokens[tokens.length - 1];
     }

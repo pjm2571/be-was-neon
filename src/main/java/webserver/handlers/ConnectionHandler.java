@@ -1,6 +1,8 @@
 package webserver.handlers;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 
 import config.Config;
@@ -26,14 +28,17 @@ public class ConnectionHandler implements Runnable {
         logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
                 connection.getPort());
         // Request Handler 생성
-        try {
-            RequestHandler requestHandler = new RequestHandler(connection.getInputStream(), config);
+        try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
+            RequestHandler requestHandler = new RequestHandler(in, config);
 
             HttpRequest httpRequest = requestHandler.getHttpRequest();
 
-            ResponseHandler responseHandler = new ResponseHandler(connection.getOutputStream(), httpRequest.sendResponse(), config);
+            ResponseHandler responseHandler = new ResponseHandler(out, httpRequest.sendResponse(), config);
+            responseHandler.handleResponse();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } catch (IllegalArgumentException e) {
+            return;
         }
     }
 }

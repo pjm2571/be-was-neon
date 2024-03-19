@@ -2,6 +2,7 @@ package webserver.handlers.response;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.handlers.StatusCode;
 
 import java.util.Map;
 
@@ -9,23 +10,41 @@ public abstract class HttpResponse {
     private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);
 
     private String requestTarget;
+
     private String startLine;
-    private Map<String, String> headers;
+    private String responseHeader;
+    private byte[] responseBody;
 
     public HttpResponse(String requestTarget) {
         this.requestTarget = requestTarget;
         logger.debug("Response Object : {}", this.getClass().getSimpleName());
     }
 
-    public void setStartLine(String startLine) {
-        logger.debug("Response : {}", startLine);
-        this.startLine = startLine;
+    public String getRequestTarget() {
+        return requestTarget;
     }
 
-    public void setHeaders(Map<String, String> headers) {
-        headers.forEach((key, value) -> logger.debug("Header : {} : {}", key, value));
-        this.headers = headers;
+    public String getStartLine() {
+        return startLine;
     }
 
+    public String getResponseHeader() {
+        return responseHeader;
+    }
 
+    public byte[] getResponseBody() {
+        return responseBody;
+    }
+
+    public void setResponseBody(byte[] body) {
+        this.responseBody = body;
+    }
+
+    public void setResponseHeader(String mimeType, int bodyLength) {
+        this.responseHeader = "Content-Type: " + mimeType + "\r\n" + "Content-Length: " + bodyLength + "\r\n" + "\r\n";
+    }
+
+    public void setStartLine(StatusCode statusCode) {
+        this.startLine = "HTTP/1.1 " + statusCode.getCode() + " " + statusCode.getDescription();
+    }
 }

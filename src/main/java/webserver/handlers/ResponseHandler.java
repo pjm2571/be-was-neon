@@ -1,33 +1,42 @@
 package webserver.handlers;
 
 import config.Config;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import webserver.handlers.request.HttpRequest;
 import webserver.handlers.response.HttpResponse;
 import webserver.handlers.response.QueryResponse;
 import webserver.handlers.response.StaticFileResponse;
 import webserver.handlers.writers.ResponseWriter;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 
 public class ResponseHandler {
 
-    private ResponseWriter responseWriter;
+    private static final Logger logger = LoggerFactory.getLogger(ResponseHandler.class);
+
+    private DataOutputStream dos;
     private HttpResponse httpResponse;
-    private final String staticRoute;
+    private final Config config;
 
     public ResponseHandler(OutputStream outputStream, HttpResponse httpResponse, Config config) {
-        this.responseWriter = new ResponseWriter(outputStream);
+        this.dos = new DataOutputStream(outputStream);
         this.httpResponse = httpResponse;
-        this.staticRoute = config.getStaticRoute();
+        this.config = config;
     }
+
 
     public void handleResponse() {
         if (httpResponse instanceof QueryResponse) {
+//            QueryHandler queryHandler = new QueryHandler(httpResponse, config);
+//            queryHandler.handleResponse();
         }
         if (httpResponse instanceof StaticFileResponse) {
-
+            StaticFileHandler staticFileHandler = new StaticFileHandler(dos, httpResponse, config);
+            staticFileHandler.handleResponse();
         }
     }
-
 
 }
