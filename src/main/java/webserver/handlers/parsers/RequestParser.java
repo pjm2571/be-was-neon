@@ -11,9 +11,11 @@ public class RequestParser {
     }
 
     public HttpRequest extractRequest() {
-        if (startLine == null) {
-            return null;
+
+        if (RequestUtils.isPostRequest(startLine)) {
+            return new PostRequest(startLine);
         }
+
         // requestTarget을 가져온다.
         String requestTarget = RequestUtils.getRequestTarget(startLine);
 

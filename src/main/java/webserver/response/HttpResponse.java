@@ -9,6 +9,7 @@ public abstract class HttpResponse {
     private static final String CSRF = "\r\n";
 
     private String requestTarget;
+    protected String requestBody;
 
     private String startLine;
     private String responseHeader;
@@ -42,11 +43,19 @@ public abstract class HttpResponse {
         this.responseHeader = "Content-Type: " + mimeType + CSRF + "Content-Length: " + bodyLength + CSRF + CSRF;
     }
 
-    public void setResponseHeader(){
+    public void setResponseHeader() {
         this.responseHeader = "Location: " + "/index.html" + CSRF + CSRF;
     }
 
     public void setStartLine(StatusCode statusCode) {
         this.startLine = "HTTP/1.1 " + statusCode.getCode() + " " + statusCode.getDescription() + CSRF;
+    }
+
+    public String getRequestBody() {
+        return requestBody;
+    }
+
+    public void setRequestBody(String requestBody) {
+        this.requestBody = requestBody;
     }
 }

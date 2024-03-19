@@ -11,6 +11,7 @@ public abstract class HttpRequest {
 
     protected String startLine;
     private Map<String, String> headers;
+    protected String body;
 
     HttpRequest(String startLine) {
         this.startLine = startLine;
@@ -21,6 +22,10 @@ public abstract class HttpRequest {
         logger.debug("Request : {}", startLine);
         headers.forEach((key, value) -> logger.debug("Header : {} : {}", key, value));
         this.headers = headers;
+    }
+
+    public void setRequestBody(String body) {
+        this.body = body;
     }
 
     public abstract HttpResponse sendResponse();

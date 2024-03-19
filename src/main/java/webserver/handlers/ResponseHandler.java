@@ -4,6 +4,7 @@ import config.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.response.HttpResponse;
+import webserver.response.PostResponse;
 import webserver.response.QueryResponse;
 import webserver.response.StaticFileResponse;
 
@@ -26,6 +27,10 @@ public class ResponseHandler {
 
 
     public void handleResponse() {
+        if (httpResponse instanceof PostResponse) {
+            PostHandler postHandler = new PostHandler(dos, httpResponse, config);
+            postHandler.handleResponse();
+        }
         if (httpResponse instanceof QueryResponse) {
             QueryHandler queryHandler = new QueryHandler(dos, httpResponse, config);
             queryHandler.handleResponse();

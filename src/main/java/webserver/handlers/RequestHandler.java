@@ -2,6 +2,7 @@ package webserver.handlers;
 
 
 import config.Config;
+import webserver.request.PostRequest;
 import webserver.utils.HeaderUtils;
 
 import org.slf4j.Logger;
@@ -28,6 +29,7 @@ public class RequestHandler {
         BufferedReader br = new BufferedReader(new InputStreamReader(in, config.getEncoding()));
 
         String startLine = br.readLine();
+
         if (startLine == null) {
             throw new IllegalArgumentException();
             // null 값에 대한 처리는 어떻게..?
@@ -35,7 +37,10 @@ public class RequestHandler {
 
         HttpRequest httpRequest = getRequest(startLine);
 
-        httpRequest.setHeaders(getHeader(br));
+        Map<String, String> headers = getHeader(br);
+        httpRequest.setHeaders(headers);
+
+        setBody(httpRequest, headers, br);
 
         return httpRequest;
     }
@@ -43,6 +48,17 @@ public class RequestHandler {
     private HttpRequest getRequest(String startLine) {
         RequestParser requestParser = new RequestParser(startLine);
         return requestParser.extractRequest();
+    }
+
+    private void setBody(HttpRequest httpRequest, Map<String, String> headers, BufferedReader br) throws IOException {
+        if (!(httpRequest instanceof PostRequest)) {
+            return;
+        }
+        int length = Integer.parseInt(headers.get("Content-Length"));
+
+        char[] body = new char[length];
+        br.read(body, 0, length);
+        httpRequest.setRequestBody(new String(body));
     }
 
     private Map<String, String> getHeader(BufferedReader br) throws IOException {
