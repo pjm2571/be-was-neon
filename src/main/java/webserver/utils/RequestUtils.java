@@ -1,7 +1,6 @@
 package webserver.utils;
 
-import ch.qos.logback.classic.gaffer.PropertyUtil;
-import webserver.type.ContentType;
+import webserver.ContentType;
 
 import java.util.Arrays;
 

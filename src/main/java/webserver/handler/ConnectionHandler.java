@@ -1,4 +1,4 @@
-package webserver.handlers;
+package webserver.handler;
 
 import java.io.*;
 import java.net.Socket;
@@ -6,6 +6,10 @@ import java.net.Socket;
 import config.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.parser.RequestHandlerParser;
+import webserver.parser.ResponseHandlerParser;
+import webserver.handler.request.RequestHandler;
+import webserver.handler.response.ResponseHandler;
 import webserver.request.HttpRequest;
 
 public class ConnectionHandler implements Runnable {
@@ -26,12 +30,20 @@ public class ConnectionHandler implements Runnable {
                 connection.getPort());
         // Request Handler 생성
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            RequestHandler requestHandler = new RequestHandler(in, config);
+
+            RequestHandlerParser requestHandlerParser = new RequestHandlerParser(in, config);
+
+            RequestHandler requestHandler = requestHandlerParser.getRequestHandler();
 
             HttpRequest httpRequest = requestHandler.getHttpRequest();
 
-            ResponseHandler responseHandler = new ResponseHandler(out, httpRequest.sendResponse(), config);
+
+            ResponseHandlerParser responseHandlerParser = new ResponseHandlerParser(out, config, httpRequest);
+
+            ResponseHandler responseHandler = responseHandlerParser.getResponseHandler();
+
             responseHandler.handleResponse();
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (IllegalArgumentException e) {

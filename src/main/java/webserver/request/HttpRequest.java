@@ -2,7 +2,7 @@ package webserver.request;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.response.HttpResponse;
+import webserver.utils.RequestUtils;
 
 import java.util.Map;
 
@@ -10,23 +10,31 @@ public abstract class HttpRequest {
     private static final Logger logger = LoggerFactory.getLogger(HttpRequest.class);
 
     protected String startLine;
-    private Map<String, String> headers;
+    protected Map<String, String> headers;
     protected String body;
 
-    HttpRequest(String startLine) {
+    public HttpRequest(String startLine, Map<String, String> headers) {
         this.startLine = startLine;
-    }
-
-    public void setHeaders(Map<String, String> headers) {
-        logger.debug("Request Object : {}", this.getClass().getSimpleName());
-        logger.debug("Request : {}", startLine);
-        headers.forEach((key, value) -> logger.debug("Header : {} : {}", key, value));
         this.headers = headers;
+        logger.debug("Request StartLine : {}", startLine);
+        headers.forEach((key, value) -> logger.debug("Header : {} : {}", key, value));
     }
 
-    public void setRequestBody(String body) {
+    public HttpRequest(String startLine, Map<String, String> headers, String body) {
+        this.startLine = startLine;
+        this.headers = headers;
         this.body = body;
+        logger.debug("Request StartLine : {}", startLine);
+        headers.forEach((key, value) -> logger.debug("Header : {} : {}", key, value));
+        logger.debug("Request Body : {}", body);
     }
 
-    public abstract HttpResponse sendResponse();
+    public String getRequestTarget() {
+        return RequestUtils.getRequestTarget(startLine);
+    }
+
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
+
 }

@@ -1,17 +1,12 @@
 package webserver.request;
 
-import webserver.utils.RequestUtils;
 import webserver.response.HttpResponse;
-import webserver.response.QueryResponse;
+
+import java.util.Map;
 
 public class QueryRequest extends HttpRequest {
-    public QueryRequest(String startLine) {
-        super(startLine);
+    public QueryRequest(String startLine, Map<String, String> headers) {
+        super(startLine, headers);
     }
 
-    @Override
-    public HttpResponse sendResponse() {
-        String requestTarget = RequestUtils.getRequestTarget(startLine);
-        return new QueryResponse(requestTarget);
-    }
 }

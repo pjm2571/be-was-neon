@@ -1,18 +1,21 @@
 package webserver.request;
 
 import webserver.response.HttpResponse;
-import webserver.response.PostResponse;
-import webserver.utils.RequestUtils;
+
+import java.util.Map;
 
 public class PostRequest extends HttpRequest {
-
-    public PostRequest(String startLine) {
-        super(startLine);
+    public PostRequest(String startLine, Map<String, String> headers, String body) {
+        super(startLine, headers, body);
     }
 
-    @Override
-    public HttpResponse sendResponse() {
-        String requestTarget = RequestUtils.getRequestTarget(startLine);
-        return new PostResponse(requestTarget, body);
+
+    public String getRequestBody() {
+        return body;
     }
+
+    public int getContentLength() {
+        return Integer.parseInt(headers.get("Content-Length"));
+    }
+
 }
