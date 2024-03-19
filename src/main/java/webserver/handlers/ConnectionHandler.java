@@ -1,15 +1,12 @@
 package webserver.handlers;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 
 import config.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.handlers.request.HttpRequest;
-import webserver.handlers.request.QueryRequest;
+import webserver.request.HttpRequest;
 
 public class ConnectionHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(ConnectionHandler.class);

@@ -3,12 +3,11 @@ package webserver.handlers;
 import config.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.handlers.response.HttpResponse;
-import webserver.handlers.response.QueryResponse;
-import webserver.handlers.response.StaticFileResponse;
+import webserver.response.HttpResponse;
+import webserver.response.QueryResponse;
+import webserver.response.StaticFileResponse;
 
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 
 public class ResponseHandler {

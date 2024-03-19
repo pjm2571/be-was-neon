@@ -1,4 +1,4 @@
-package utils;
+package webserver.utils;
 
 public class HeaderUtils {
     private final static String HEADER_SEPARATOR = ":";

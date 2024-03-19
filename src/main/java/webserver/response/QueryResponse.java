@@ -1,4 +1,4 @@
-package webserver.handlers.response;
+package webserver.response;
 
 public class QueryResponse extends HttpResponse {
 

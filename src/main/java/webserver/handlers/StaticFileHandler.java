@@ -3,9 +3,10 @@ package webserver.handlers;
 import config.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.RequestUtils;
-import webserver.handlers.response.HttpResponse;
-import webserver.types.ContentType;
+import webserver.utils.RequestUtils;
+import webserver.response.HttpResponse;
+import webserver.status.StatusCode;
+import webserver.type.ContentType;
 
 import java.io.*;
 import java.util.stream.Stream;

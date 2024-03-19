@@ -1,4 +1,4 @@
-package webserver.handlers;
+package webserver.status;
 
 public enum StatusCode {
     OK(200, "OK"),

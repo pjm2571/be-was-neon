@@ -1,8 +1,8 @@
-package webserver.handlers.request;
+package webserver.request;
 
-import utils.RequestUtils;
-import webserver.handlers.response.HttpResponse;
-import webserver.handlers.response.StaticFileResponse;
+import webserver.utils.RequestUtils;
+import webserver.response.HttpResponse;
+import webserver.response.StaticFileResponse;
 
 public class StaticFileRequest extends HttpRequest {
     public StaticFileRequest(String startLine) {

@@ -1,12 +1,7 @@
 package webserver.handlers.parsers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import utils.RequestUtils;
-import webserver.handlers.request.HttpRequest;
-import webserver.handlers.request.QueryRequest;
-import webserver.handlers.request.StaticFileRequest;
-import webserver.handlers.request.UrlRequest;
+import webserver.utils.RequestUtils;
+import webserver.request.*;
 
 public class RequestParser {
     private String startLine;

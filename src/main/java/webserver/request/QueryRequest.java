@@ -1,8 +1,8 @@
-package webserver.handlers.request;
+package webserver.request;
 
-import utils.RequestUtils;
-import webserver.handlers.response.HttpResponse;
-import webserver.handlers.response.QueryResponse;
+import webserver.utils.RequestUtils;
+import webserver.response.HttpResponse;
+import webserver.response.QueryResponse;
 
 public class QueryRequest extends HttpRequest {
     public QueryRequest(String startLine) {

@@ -2,12 +2,12 @@ package webserver.handlers;
 
 
 import config.Config;
-import utils.HeaderUtils;
+import webserver.utils.HeaderUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.handlers.parsers.RequestParser;
-import webserver.handlers.request.HttpRequest;
+import webserver.request.HttpRequest;
 
 import java.io.*;
 import java.util.LinkedHashMap;

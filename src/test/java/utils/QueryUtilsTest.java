@@ -3,6 +3,7 @@ package utils;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import webserver.utils.QueryUtils;
 
 import java.util.Map;
 

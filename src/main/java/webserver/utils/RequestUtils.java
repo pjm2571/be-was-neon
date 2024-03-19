@@ -1,6 +1,6 @@
-package utils;
+package webserver.utils;
 
-import webserver.types.ContentType;
+import webserver.type.ContentType;
 
 import java.util.Arrays;
 

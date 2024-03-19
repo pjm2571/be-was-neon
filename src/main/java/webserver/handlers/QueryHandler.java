@@ -3,13 +3,13 @@ package webserver.handlers;
 import config.Config;
 import db.Database;
 import model.User;
+import webserver.utils.QueryUtils;
+import webserver.response.HttpResponse;
+import webserver.status.StatusCode;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.QueryUtils;
-import webserver.handlers.response.HttpResponse;
-
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Map;
 
 public class QueryHandler {
@@ -27,10 +27,10 @@ public class QueryHandler {
     }
 
     public void handleResponse() {
-
         handleCreate(httpResponse.getRequestTarget());
 
         setResponse();
+
         try {
             dos.writeBytes(httpResponse.getStartLine());
             dos.writeBytes(httpResponse.getResponseHeader());

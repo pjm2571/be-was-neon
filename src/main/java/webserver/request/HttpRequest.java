@@ -1,8 +1,8 @@
-package webserver.handlers.request;
+package webserver.request;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.handlers.response.HttpResponse;
+import webserver.response.HttpResponse;
 
 import java.util.Map;
 

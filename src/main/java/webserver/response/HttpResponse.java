@@ -1,10 +1,8 @@
-package webserver.handlers.response;
+package webserver.response;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.handlers.StatusCode;
-
-import java.util.Map;
+import webserver.status.StatusCode;
 
 public abstract class HttpResponse {
     private static final Logger logger = LoggerFactory.getLogger(HttpResponse.class);

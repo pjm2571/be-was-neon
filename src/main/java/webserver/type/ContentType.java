@@ -1,4 +1,4 @@
-package webserver.types;
+package webserver.type;
 
 public enum ContentType {
     html("text/html;charset=utf-8"),
