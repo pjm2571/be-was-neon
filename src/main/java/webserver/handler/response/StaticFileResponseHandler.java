@@ -49,13 +49,6 @@ public class StaticFileResponseHandler extends ResponseHandler {
             logger.error(e.getMessage());
         }
     }
-
-
-    @Override
-    protected String generateResponseStartLine(StatusCode statusCode) {
-        return HTTP_VERSION + SPACE + statusCode.getCode() + SPACE + statusCode.getDescription() + CSRF;
-    }
-
     private String generateResponseHeader(int bodyLength, String mimeType) {
         return "Content-Type:" + SPACE + mimeType + CSRF + "Content-Length:" + SPACE + bodyLength + CSRF + CSRF;
     }

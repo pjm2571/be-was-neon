@@ -5,7 +5,7 @@ public abstract class HttpResponse {
     protected String requestHeader;
     protected byte[] requestBody;
 
-    public HttpResponse(String requestTarget, String startLine) {
+    public HttpResponse(String startLine, String requestHeader) {
         this.startLine = startLine;
         this.requestHeader = requestHeader;
     }
