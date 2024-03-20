@@ -8,6 +8,7 @@ import webserver.StatusCode;
 import java.io.DataOutputStream;
 
 public abstract class ResponseHandler {
+    protected static final String CREATE_USER = "/createUser";
     protected static final String CSRF = "\r\n";
     protected static final String SPACE = " ";
     protected static final String HTTP_VERSION = "HTTP/1.1";

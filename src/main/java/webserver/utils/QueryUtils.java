@@ -12,7 +12,7 @@ public class QueryUtils {
     private final static String QUERY_SEQUENCE = "\\?";
 
     public static String getQueryLine(String queryLine) {
-        String[] tokens = queryLine.split(QUERY_SEPARATOR);
+        String[] tokens = queryLine.split(QUERY_SEQUENCE);
         return tokens[1];
     }
 

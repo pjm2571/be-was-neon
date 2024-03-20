@@ -19,9 +19,8 @@ import java.io.IOException;
 import java.util.Map;
 
 public class PostResponseHandler extends ResponseHandler {
-
     private static final Logger logger = LoggerFactory.getLogger(PostResponseHandler.class);
-    private static final String CREATE_USER = "/createUser";
+
 
     public PostResponseHandler(DataOutputStream responseWriter, Config config, HttpRequest httpRequest) {
         super(responseWriter, config, httpRequest);
