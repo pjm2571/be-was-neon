@@ -13,8 +13,10 @@ import webserver.StatusCode;
 import webserver.response.PostResponse;
 import webserver.utils.QueryUtils;
 
+import javax.swing.text.html.CSS;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.security.cert.CRL;
 import java.util.Map;
 
 public class PostResponseHandler extends ResponseHandler {
@@ -27,10 +29,10 @@ public class PostResponseHandler extends ResponseHandler {
 
     @Override
     public void handleResponse() {
-        handleCreate();
+        String sid = handleCreate();
 
         String startLine = generateResponseStartLine(StatusCode.FOUND);
-        String responseHeader = generateResponseHeader("/index.html");
+        String responseHeader = generateResponseHeader(sid, "/index.html");
 
         HttpResponse httpResponse = new PostResponse(startLine, responseHeader);
 
@@ -50,20 +52,17 @@ public class PostResponseHandler extends ResponseHandler {
     }
 
 
-    private String generateResponseHeader(String redirectTarget) {
-        return "Location:" + SPACE + redirectTarget + CRLF + CRLF;
+    private String generateResponseHeader(String sid, String redirectTarget) {
+        return "Location:" + SPACE + redirectTarget + CRLF +
+                "Set-Cookie:" + SPACE + "sid=" + SPACE + sid + ";" + SPACE + "Path=/" + CRLF + CRLF;
     }
 
-    private void handleCreate() {
+    private String handleCreate() {
         String requestTarget = httpRequest.getRequestTarget();
         String requestBody = ((PostRequest) httpRequest).getRequestBody();
 
-        if (requestTarget.startsWith(CREATE_USER)) {
-            Map<String, String> queries = QueryUtils.getQueries(requestBody);
-            User user = new User(queries.get("userId"), queries.get("password"), queries.get("name"), queries.get("email"));
-            Database.addUser(user);
-            logger.debug("user created : {}", user);
-        }
+        CreateHandler createHandler = new CreateHandler(requestTarget, requestBody);
+        return createHandler.create();
     }
 
 }
