@@ -31,10 +31,11 @@ public class QueryResponseHandler extends ResponseHandler {
 
         HttpResponse httpResponse = new PostResponse(startLine, responseHeader);
 
-        writeRedirectResponse(httpResponse);
+        writeResponse(httpResponse);
     }
 
-    private void writeRedirectResponse(HttpResponse httpResponse) {
+    @Override
+    protected void writeResponse(HttpResponse httpResponse) {
         try {
             responseWriter.writeBytes(httpResponse.getStartLine());
             responseWriter.writeBytes(httpResponse.getRequestHeader());
@@ -44,6 +45,7 @@ public class QueryResponseHandler extends ResponseHandler {
             logger.error(e.getMessage());
         }
     }
+
 
     private String generateResponseHeader(String redirectTarget) {
         return "Location:" + SPACE + redirectTarget + CRLF + CRLF;

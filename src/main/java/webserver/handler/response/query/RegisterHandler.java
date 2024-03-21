@@ -11,6 +11,7 @@ import webserver.response.HttpResponse;
 import webserver.response.PostResponse;
 import webserver.utils.QueryUtils;
 
+import java.security.cert.CRL;
 import java.util.Map;
 import java.util.Random;
 
@@ -21,27 +22,26 @@ public class RegisterHandler {
     private static final String CRLF = "\r\n";
 
     private static final int SID_LENGTH = 20;
-    private static final int ASCII_START = 32;
-    private static final int ASCII_LENGTH = 94;
+    private static final int ASCII_START = 60;
+    private static final int ASCII_LENGTH = 66;
     private String requestBody;
 
     public RegisterHandler(String requestBody) {
         this.requestBody = requestBody;
     }
 
-    private String registerUser() {
+    private void registerUser() {
         User user = createUser();   // User 객체를 생성
         Database.addUser(user); // DB에 저장
         logger.debug("user created : {}", user);
         String randomSid = getRandomSid();
         SessionStore.addSession(randomSid, user);  // Session 저장소에 저장
-        return randomSid;
     }
 
     public HttpResponse getResponse() {
-        String sid = registerUser();
+        registerUser();
         String startLine = generateResponseStartLine(StatusCode.FOUND);
-        String header = generateResponseHeader(sid, "/index.html");
+        String header = generateResponseHeader("/index.html");
         return new PostResponse(startLine, header);
     }
 
@@ -49,9 +49,8 @@ public class RegisterHandler {
         return HTTP_VERSION + SPACE + statusCode.getCode() + SPACE + statusCode.getDescription() + CRLF;
     }
 
-    private String generateResponseHeader(String sid, String redirectTarget) {
-        return "Location:" + SPACE + redirectTarget + CRLF +
-                "Set-Cookie:" + SPACE + "sid=" + SPACE + sid + ";" + SPACE + "Path=/" + CRLF + CRLF;
+    private String generateResponseHeader(String redirectTarget) {
+        return "Location:" + SPACE + redirectTarget + CRLF + CRLF;
     }
 
     private User createUser() {

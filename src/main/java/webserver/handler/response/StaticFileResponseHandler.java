@@ -37,7 +37,8 @@ public class StaticFileResponseHandler extends ResponseHandler {
         writeResponse(httpResponse);
     }
 
-    private void writeResponse(HttpResponse httpResponse) {
+    @Override
+    protected void writeResponse(HttpResponse httpResponse) {
         try {
             responseWriter.writeBytes(httpResponse.getStartLine());
             responseWriter.writeBytes(httpResponse.getRequestHeader());

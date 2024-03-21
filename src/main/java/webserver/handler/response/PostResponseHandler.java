@@ -4,6 +4,7 @@ package webserver.handler.response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import config.Config;
+import webserver.handler.response.query.LoginHandler;
 import webserver.handler.response.query.RegisterHandler;
 import webserver.request.HttpRequest;
 import webserver.request.PostRequest;
@@ -30,20 +31,22 @@ public class PostResponseHandler extends ResponseHandler {
         String requestTarget = httpRequest.getRequestTarget();
         String requestBody = ((PostRequest) httpRequest).getRequestBody();
 
-        HttpResponse httpResponse;
+
         if (requestTarget.startsWith(CREATE_USER)) {
             RegisterHandler registerHandler = new RegisterHandler(requestBody);
-            httpResponse = registerHandler.getResponse();
-            writeRedirectResponse(httpResponse);
+            HttpResponse httpResponse = registerHandler.getResponse();
+            writeResponse(httpResponse);
         }
 
         if (requestTarget.startsWith(LOGIN_USER)) {
-//            httpResponse = LoginHandler.getResponse();
-//            writeResponse(httpResponse);
+            LoginHandler loginHandler = new LoginHandler(requestBody);
+            HttpResponse httpResponse = loginHandler.getResponse();
+            writeResponse(httpResponse);
         }
     }
 
-    private void writeRedirectResponse(HttpResponse httpResponse) {
+    @Override
+    protected void writeResponse(HttpResponse httpResponse) {
         try {
             responseWriter.writeBytes(httpResponse.getStartLine());
             responseWriter.writeBytes(httpResponse.getRequestHeader());
@@ -54,16 +57,5 @@ public class PostResponseHandler extends ResponseHandler {
         }
     }
 
-    private void writeResponse(HttpResponse httpResponse) {
-        try {
-            responseWriter.writeBytes(httpResponse.getStartLine());
-            responseWriter.writeBytes(httpResponse.getRequestHeader());
-            responseWriter.write(httpResponse.getRequestBody(), 0, httpResponse.getRequestBody().length);
-
-            responseWriter.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
 
 }
