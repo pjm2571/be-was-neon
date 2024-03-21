@@ -48,7 +48,6 @@ public class LoginHandler {
             return headerBuilder.toString();
         }
         logger.info("Login Succeed");
-        logger.debug("SID : {}", sid);
         headerBuilder.append(generateResponseHeader("/"));
         headerBuilder.append(generateCookie(sid));
 
@@ -66,13 +65,25 @@ public class LoginHandler {
     private String getUserSid() {
         Map<String, String> queries = QueryUtils.getQueries(requestBody);
 
-        String userId = queries.get("userId");
-        User user = Database.findUserById(userId);
+        String inputId = queries.get("userId");
+        String inputPassword = queries.get("password");
+        User user = Database.findUserById(inputId);
         if (user == null) {
+            logger.info("Not Registered User");
             return null;
         }
 
+        if (!validateUser(user, inputId, inputPassword)) {
+            logger.info("Registered But Invalid User");
+            return null;
+        }
+
+        logger.info("Valid User");
         return SessionStore.getSessionByUser(user);
+    }
+
+    private boolean validateUser(User user, String inputId, String inputPassword) {
+        return user.getPassword().equals(inputPassword) && user.getUserId().equals(inputId);
     }
 
 }
