@@ -2,7 +2,7 @@ package webserver.response;
 
 public class StaticFileResponse extends HttpResponse {
 
-    public StaticFileResponse(String requestTarget, String requestHeader, byte[] requestBody) {
-        super(requestTarget, requestHeader, requestBody);
+    public StaticFileResponse(String startLine, String responseHeader, byte[] responseBody) {
+        super(startLine, responseHeader, responseBody);
     }
 }
