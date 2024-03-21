@@ -37,8 +37,7 @@ public class StaticFileResponseHandler extends ResponseHandler {
         writeResponse(httpResponse);
     }
 
-    @Override
-    protected void writeResponse(HttpResponse httpResponse) {
+    private void writeResponse(HttpResponse httpResponse) {
         try {
             responseWriter.writeBytes(httpResponse.getStartLine());
             responseWriter.writeBytes(httpResponse.getRequestHeader());
@@ -49,6 +48,7 @@ public class StaticFileResponseHandler extends ResponseHandler {
             logger.error(e.getMessage());
         }
     }
+
     private String generateResponseHeader(int bodyLength, String mimeType) {
         return "Content-Type:" + SPACE + mimeType + CRLF + "Content-Length:" + SPACE + bodyLength + CRLF + CRLF;
     }

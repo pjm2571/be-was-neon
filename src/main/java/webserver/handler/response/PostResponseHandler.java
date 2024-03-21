@@ -4,23 +4,21 @@ package webserver.handler.response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import config.Config;
-import db.Database;
-import model.User;
+import webserver.handler.response.query.RegisterHandler;
 import webserver.request.HttpRequest;
 import webserver.request.PostRequest;
 import webserver.response.HttpResponse;
 import webserver.StatusCode;
 import webserver.response.PostResponse;
-import webserver.utils.QueryUtils;
 
-import javax.swing.text.html.CSS;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.security.cert.CRL;
-import java.util.Map;
 
 public class PostResponseHandler extends ResponseHandler {
     private static final Logger logger = LoggerFactory.getLogger(PostResponseHandler.class);
+
+    private static final String CREATE_USER = "/createUser";
+    private static final String LOGIN_USER = "/loginUser";
 
 
     public PostResponseHandler(DataOutputStream responseWriter, Config config, HttpRequest httpRequest) {
@@ -29,18 +27,23 @@ public class PostResponseHandler extends ResponseHandler {
 
     @Override
     public void handleResponse() {
-        String sid = handleCreate();
+        String requestTarget = httpRequest.getRequestTarget();
+        String requestBody = ((PostRequest) httpRequest).getRequestBody();
 
-        String startLine = generateResponseStartLine(StatusCode.FOUND);
-        String responseHeader = generateResponseHeader(sid, "/index.html");
+        HttpResponse httpResponse;
+        if (requestTarget.startsWith(CREATE_USER)) {
+            RegisterHandler registerHandler = new RegisterHandler(requestBody);
+            httpResponse = registerHandler.getResponse();
+            writeRedirectResponse(httpResponse);
+        }
 
-        HttpResponse httpResponse = new PostResponse(startLine, responseHeader);
-
-        writeResponse(httpResponse);
+        if (requestTarget.startsWith(LOGIN_USER)) {
+//            httpResponse = LoginHandler.getResponse();
+//            writeResponse(httpResponse);
+        }
     }
 
-    @Override
-    protected void writeResponse(HttpResponse httpResponse) {
+    private void writeRedirectResponse(HttpResponse httpResponse) {
         try {
             responseWriter.writeBytes(httpResponse.getStartLine());
             responseWriter.writeBytes(httpResponse.getRequestHeader());
@@ -51,18 +54,16 @@ public class PostResponseHandler extends ResponseHandler {
         }
     }
 
+    private void writeResponse(HttpResponse httpResponse) {
+        try {
+            responseWriter.writeBytes(httpResponse.getStartLine());
+            responseWriter.writeBytes(httpResponse.getRequestHeader());
+            responseWriter.write(httpResponse.getRequestBody(), 0, httpResponse.getRequestBody().length);
 
-    private String generateResponseHeader(String sid, String redirectTarget) {
-        return "Location:" + SPACE + redirectTarget + CRLF +
-                "Set-Cookie:" + SPACE + "sid=" + SPACE + sid + ";" + SPACE + "Path=/" + CRLF + CRLF;
-    }
-
-    private String handleCreate() {
-        String requestTarget = httpRequest.getRequestTarget();
-        String requestBody = ((PostRequest) httpRequest).getRequestBody();
-
-        CreateHandler createHandler = new CreateHandler(requestTarget, requestBody);
-        return createHandler.create();
+            responseWriter.flush();
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
     }
 
 }

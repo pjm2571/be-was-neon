@@ -31,11 +31,10 @@ public class QueryResponseHandler extends ResponseHandler {
 
         HttpResponse httpResponse = new PostResponse(startLine, responseHeader);
 
-        writeResponse(httpResponse);
+        writeRedirectResponse(httpResponse);
     }
 
-    @Override
-    protected void writeResponse(HttpResponse httpResponse) {
+    private void writeRedirectResponse(HttpResponse httpResponse) {
         try {
             responseWriter.writeBytes(httpResponse.getStartLine());
             responseWriter.writeBytes(httpResponse.getRequestHeader());

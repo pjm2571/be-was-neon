@@ -25,9 +25,6 @@ public abstract class ResponseHandler {
 
     public abstract void handleResponse();
 
-    protected abstract void writeResponse(HttpResponse httpResponse);
-
-
     protected String generateResponseStartLine(StatusCode statusCode) {
         return HTTP_VERSION + SPACE + statusCode.getCode() + SPACE + statusCode.getDescription() + CRLF;
     }
