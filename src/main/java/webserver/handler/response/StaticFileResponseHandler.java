@@ -41,8 +41,8 @@ public class StaticFileResponseHandler extends ResponseHandler {
     protected void writeResponse(HttpResponse httpResponse) {
         try {
             responseWriter.writeBytes(httpResponse.getStartLine());
-            responseWriter.writeBytes(httpResponse.getRequestHeader());
-            responseWriter.write(httpResponse.getRequestBody(), 0, httpResponse.getRequestBody().length);
+            responseWriter.writeBytes(httpResponse.getResponseHeader());
+            responseWriter.write(httpResponse.getResponseBody(), 0, httpResponse.getResponseBody().length);
 
             responseWriter.flush();
         } catch (IOException e) {

@@ -2,30 +2,30 @@ package webserver.response;
 
 public abstract class HttpResponse {
     protected String startLine;
-    protected String requestHeader;
-    protected byte[] requestBody;
+    protected String responseHeader;
+    protected byte[] responseBody;
 
-    public HttpResponse(String startLine, String requestHeader) {
+    public HttpResponse(String startLine, String responseHeader) {
         this.startLine = startLine;
-        this.requestHeader = requestHeader;
+        this.responseHeader = responseHeader;
     }
 
-    public HttpResponse(String startLine, String requestHeader, byte[] requestBody) {
+    public HttpResponse(String startLine, String responseHeader, byte[] responseBody) {
         this.startLine = startLine;
-        this.requestHeader = requestHeader;
-        this.requestBody = requestBody;
+        this.responseHeader = responseHeader;
+        this.responseBody = responseBody;
     }
 
     public String getStartLine() {
         return startLine;
     }
 
-    public String getRequestHeader() {
-        return requestHeader;
+    public String getResponseHeader() {
+        return responseHeader;
     }
 
-    public byte[] getRequestBody() {
-        return requestBody;
+    public byte[] getResponseBody() {
+        return responseBody;
     }
 
 }

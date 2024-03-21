@@ -38,7 +38,7 @@ public class QueryResponseHandler extends ResponseHandler {
     protected void writeResponse(HttpResponse httpResponse) {
         try {
             responseWriter.writeBytes(httpResponse.getStartLine());
-            responseWriter.writeBytes(httpResponse.getRequestHeader());
+            responseWriter.writeBytes(httpResponse.getResponseHeader());
 
             responseWriter.flush();
         } catch (IOException e) {

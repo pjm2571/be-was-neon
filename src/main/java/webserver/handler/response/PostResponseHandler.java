@@ -9,8 +9,6 @@ import webserver.handler.response.query.RegisterHandler;
 import webserver.request.HttpRequest;
 import webserver.request.PostRequest;
 import webserver.response.HttpResponse;
-import webserver.StatusCode;
-import webserver.response.PostResponse;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -49,7 +47,7 @@ public class PostResponseHandler extends ResponseHandler {
     protected void writeResponse(HttpResponse httpResponse) {
         try {
             responseWriter.writeBytes(httpResponse.getStartLine());
-            responseWriter.writeBytes(httpResponse.getRequestHeader());
+            responseWriter.writeBytes(httpResponse.getResponseHeader());
 
             responseWriter.flush();
         } catch (IOException e) {
