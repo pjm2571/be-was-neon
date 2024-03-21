@@ -11,7 +11,6 @@ import webserver.request.PostRequest;
 import webserver.response.HttpResponse;
 import webserver.StatusCode;
 import webserver.response.PostResponse;
-import webserver.response.StaticFileResponse;
 import webserver.utils.QueryUtils;
 
 import java.io.DataOutputStream;
@@ -52,7 +51,7 @@ public class PostResponseHandler extends ResponseHandler {
 
 
     private String generateResponseHeader(String redirectTarget) {
-        return "Location:" + SPACE + redirectTarget + CSRF + CSRF;
+        return "Location:" + SPACE + redirectTarget + CRLF + CRLF;
     }
 
     private void handleCreate() {

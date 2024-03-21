@@ -6,7 +6,6 @@ import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.request.HttpRequest;
-import webserver.request.PostRequest;
 import webserver.response.HttpResponse;
 import webserver.StatusCode;
 import webserver.response.PostResponse;
@@ -48,7 +47,7 @@ public class QueryResponseHandler extends ResponseHandler {
     }
 
     private String generateResponseHeader(String redirectTarget) {
-        return "Location:" + SPACE + redirectTarget + CSRF + CSRF;
+        return "Location:" + SPACE + redirectTarget + CRLF + CRLF;
     }
 
     private void handleCreate() {

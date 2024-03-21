@@ -9,7 +9,7 @@ import java.io.DataOutputStream;
 
 public abstract class ResponseHandler {
     protected static final String CREATE_USER = "/createUser";
-    protected static final String CSRF = "\r\n";
+    protected static final String CRLF = "\r\n";
     protected static final String SPACE = " ";
     protected static final String HTTP_VERSION = "HTTP/1.1";
 
@@ -29,7 +29,7 @@ public abstract class ResponseHandler {
 
 
     protected String generateResponseStartLine(StatusCode statusCode) {
-        return HTTP_VERSION + SPACE + statusCode.getCode() + SPACE + statusCode.getDescription() + CSRF;
+        return HTTP_VERSION + SPACE + statusCode.getCode() + SPACE + statusCode.getDescription() + CRLF;
     }
 
 

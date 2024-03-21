@@ -50,7 +50,7 @@ public class StaticFileResponseHandler extends ResponseHandler {
         }
     }
     private String generateResponseHeader(int bodyLength, String mimeType) {
-        return "Content-Type:" + SPACE + mimeType + CSRF + "Content-Length:" + SPACE + bodyLength + CSRF + CSRF;
+        return "Content-Type:" + SPACE + mimeType + CRLF + "Content-Length:" + SPACE + bodyLength + CRLF + CRLF;
     }
 
     private byte[] generateResponseBody() {
