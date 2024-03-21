@@ -12,6 +12,7 @@ import webserver.response.PostResponse;
 import webserver.utils.QueryUtils;
 
 import java.util.Map;
+import java.util.Random;
 
 public class LoginHandler {
     private static final Logger logger = LoggerFactory.getLogger(LoginHandler.class);
@@ -19,6 +20,9 @@ public class LoginHandler {
     private static final String CRLF = "\r\n";
     private static final String SPACE = " ";
 
+    private static final int SID_LENGTH = 20;
+    private static final int ASCII_START = 60;
+    private static final int ASCII_LENGTH = 66;
     private String requestBody;
 
     public LoginHandler(String requestBody) {
@@ -78,12 +82,36 @@ public class LoginHandler {
             return null;
         }
 
+        setSessionId(user);
+
         logger.info("Valid User");
         return SessionStore.getSessionByUser(user);
     }
 
+    private void setSessionId(User user) {
+        String randomSid = getRandomSid();
+        SessionStore.addSession(randomSid, user);  // Session 저장소에 저장
+
+    }
+
     private boolean validateUser(User user, String inputId, String inputPassword) {
         return user.getPassword().equals(inputPassword) && user.getUserId().equals(inputId);
+    }
+
+    private String getRandomSid() {
+        while (true) {
+            StringBuilder sb = new StringBuilder(SID_LENGTH);
+            Random random = new Random();
+
+            for (int i = 0; i < SID_LENGTH; i++) {
+                char randomChar = (char) (ASCII_START + random.nextInt(ASCII_LENGTH));  // 32 ~ 126 까지의 ascii code
+                sb.append(randomChar);
+            }
+
+            if (!SessionStore.sessionIdExists(sb.toString())) {
+                return sb.toString();
+            }
+        }
     }
 
 }
