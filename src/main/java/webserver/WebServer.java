@@ -4,22 +4,30 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.*;
 
+import config.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.YamlConfigReader;
+import webserver.handler.ConnectionHandler;
 
 public class WebServer {
     private static final Logger logger = LoggerFactory.getLogger(WebServer.class);
-    private static final int DEFAULT_PORT = YamlConfigReader.loadPortFromYaml();
     private static final int CORE_THREAD_SIZE = 3;
     private static final int MAX_THREAD_SIZE = 100;
     private static final long REST_TIME = 120;
 
 
     public static void main(String args[]) throws Exception {
+        Config config;
+
+        try {
+            config = new Config();
+        } catch (Exception e) {
+            return;
+        }
+
         int port = 0;
         if (args == null || args.length == 0) {
-            port = DEFAULT_PORT;
+            port = config.getPort();
         } else {
             port = Integer.parseInt(args[0]);
         }
@@ -39,7 +47,7 @@ public class WebServer {
             // 클라이언트가 연결될때까지 대기한다.
             Socket connection;
             while ((connection = listenSocket.accept()) != null) {
-                executor.execute(new RequestHandler(connection));
+                executor.execute(new ConnectionHandler(connection, config));
             }
 
             // 서버가 종료되면 executor을 shutdown
