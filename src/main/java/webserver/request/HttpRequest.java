@@ -2,7 +2,7 @@ package webserver.request;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.utils.RequestUtils;
+import webserver.utils.HttpRequestUtils;
 
 import java.util.Map;
 
@@ -30,7 +30,7 @@ public abstract class HttpRequest {
     }
 
     public String getRequestTarget() {
-        return RequestUtils.getRequestTarget(startLine);
+        return HttpRequestUtils.getRequestTarget(startLine);
     }
 
     public Map<String, String> getHeaders() {

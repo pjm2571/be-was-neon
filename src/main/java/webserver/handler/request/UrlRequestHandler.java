@@ -2,7 +2,7 @@ package webserver.handler.request;
 
 import webserver.request.HttpRequest;
 import webserver.request.StaticFileRequest;
-import webserver.utils.RequestUtils;
+import webserver.utils.HttpRequestUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,7 +20,7 @@ public class UrlRequestHandler extends RequestHandler {
     }
 
     private String replaceStartLine() {
-        String oldRequestTarget = RequestUtils.getRequestTarget(startLine);
+        String oldRequestTarget = HttpRequestUtils.getRequestTarget(startLine);
         String newRequestTarget = oldRequestTarget + DEFAULT_FILE;
         return startLine.replace(oldRequestTarget, newRequestTarget);
     }

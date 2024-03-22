@@ -8,7 +8,7 @@ import webserver.response.HttpResponse;
 import webserver.response.StaticFileResponse;
 import webserver.StatusCode;
 import webserver.ContentType;
-import webserver.utils.RequestUtils;
+import webserver.utils.HttpRequestUtils;
 
 import java.io.*;
 import java.util.stream.Stream;
@@ -78,7 +78,7 @@ public class StaticFileResponseHandler extends ResponseHandler {
     }
 
     private String getMimeType(String requestTarget) {
-        String extension = RequestUtils.getExtension(requestTarget);
+        String extension = HttpRequestUtils.getExtension(requestTarget);
 
         return Stream.of(ContentType.values())
                 .filter(contentType -> contentType.name().equalsIgnoreCase(extension))

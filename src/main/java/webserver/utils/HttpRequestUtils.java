@@ -4,12 +4,12 @@ import webserver.ContentType;
 
 import java.util.Arrays;
 
-public class RequestUtils {
+public class HttpRequestUtils {
     private final static String POST_METHOD = "POST";
     private final static String SPACE = " ";
     private final static String DOT = "\\.";
 
-    private RequestUtils() {
+    private HttpRequestUtils() {
     }
 
     /* ---------------- startLine 파싱하는 기능 모음 ---------------- */

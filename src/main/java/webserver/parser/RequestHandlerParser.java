@@ -4,7 +4,7 @@ import java.io.*;
 
 import config.Config;
 import webserver.handler.request.*;
-import webserver.utils.RequestUtils;
+import webserver.utils.HttpRequestUtils;
 
 public class RequestHandlerParser {
 
@@ -25,19 +25,19 @@ public class RequestHandlerParser {
 
     private RequestHandler extractRequestHandler(String startLine) {
         // Post Request ( POST /create ...)
-        if (RequestUtils.isPostRequest(startLine)) {
+        if (HttpRequestUtils.isPostRequest(startLine)) {
             return new PostRequestHandler(requestReader, startLine);
         }
 
-        String requestTarget = RequestUtils.getRequestTarget(startLine);
+        String requestTarget = HttpRequestUtils.getRequestTarget(startLine);
 
         // Query Request ( /createUser?userId=id ...)
-        if (RequestUtils.isQueryRequest(requestTarget)) {
+        if (HttpRequestUtils.isQueryRequest(requestTarget)) {
             return new QueryRequestHandler(requestReader, startLine);
         }
 
         // StaticFile Request ( .html .css .svg ...)
-        if (RequestUtils.isStaticFile(requestTarget)) {
+        if (HttpRequestUtils.isStaticFile(requestTarget)) {
             return new StaticFileRequestHandler(requestReader, startLine);
         }
 
