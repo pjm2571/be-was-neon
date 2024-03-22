@@ -1,4 +1,4 @@
-package webserver.parser;
+package webserver.router;
 
 import java.io.*;
 
@@ -6,12 +6,12 @@ import config.Config;
 import webserver.handler.request.*;
 import webserver.utils.HttpRequestUtils;
 
-public class RequestHandlerParser {
+public class RequestHandlerRouter {
 
     private BufferedReader requestReader;
     private Config config;
 
-    public RequestHandlerParser(InputStream in, Config config) throws UnsupportedEncodingException {
+    public RequestHandlerRouter(InputStream in, Config config) throws UnsupportedEncodingException {
         this.requestReader = new BufferedReader(new InputStreamReader(in, config.getEncoding()));
         this.config = config;
     }

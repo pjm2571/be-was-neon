@@ -6,8 +6,8 @@ import java.net.Socket;
 import config.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.parser.RequestHandlerParser;
-import webserver.parser.ResponseHandlerParser;
+import webserver.router.RequestHandlerRouter;
+import webserver.router.ResponseHandlerRouter;
 import webserver.handler.request.RequestHandler;
 import webserver.handler.response.ResponseHandler;
 import webserver.request.HttpRequest;
@@ -31,16 +31,16 @@ public class ConnectionHandler implements Runnable {
         // Request Handler 생성
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
 
-            RequestHandlerParser requestHandlerParser = new RequestHandlerParser(in, config);
+            RequestHandlerRouter requestHandlerRouter = new RequestHandlerRouter(in, config);
 
-            RequestHandler requestHandler = requestHandlerParser.getRequestHandler();
+            RequestHandler requestHandler = requestHandlerRouter.getRequestHandler();
 
             HttpRequest httpRequest = requestHandler.getHttpRequest();
 
 
-            ResponseHandlerParser responseHandlerParser = new ResponseHandlerParser(out, config, httpRequest);
+            ResponseHandlerRouter responseHandlerRouter = new ResponseHandlerRouter(out, config, httpRequest);
 
-            ResponseHandler responseHandler = responseHandlerParser.getResponseHandler();
+            ResponseHandler responseHandler = responseHandlerRouter.getResponseHandler();
 
             responseHandler.handleResponse();
 
