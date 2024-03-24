@@ -6,11 +6,9 @@ import java.net.Socket;
 import config.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.router.RequestHandlerRouter;
-import webserver.router.ResponseHandlerRouter;
-import webserver.handler.request.RequestHandler;
-import webserver.handler.response.ResponseHandler;
+import webserver.reader.HttpRequestReader;
 import webserver.request.HttpRequest;
+import webserver.response.HttpResponse;
 
 public class ConnectionHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(ConnectionHandler.class);
@@ -31,18 +29,24 @@ public class ConnectionHandler implements Runnable {
         // Request Handler 생성
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
 
-            RequestHandlerRouter requestHandlerRouter = new RequestHandlerRouter(in, config);
+            HttpRequestReader requestReader = new HttpRequestReader(in, config);    // InputStream의 값을 모두 읽음
 
-            RequestHandler requestHandler = requestHandlerRouter.getRequestHandler();
+            HttpRequest httpRequest = requestReader.getRequest();   // 읽은 후, HttpRequest 객체를 생성함
+            HttpRequestHandler requestHandler = new HttpRequestHandler(httpRequest);
 
-            HttpRequest httpRequest = requestHandler.getHttpRequest();
+            HttpResponse httpResponse = requestHandler.handleRequest(config);
 
+            DataOutputStream dos = new DataOutputStream(out);
 
-            ResponseHandlerRouter responseHandlerRouter = new ResponseHandlerRouter(out, config, httpRequest);
+            try {
+                dos.writeBytes(httpResponse.getStartLine());
+                dos.writeBytes(httpResponse.getResponseHeader());
+                dos.write(httpResponse.getResponseBody(), 0, httpResponse.getResponseBody().length);
 
-            ResponseHandler responseHandler = responseHandlerRouter.getResponseHandler();
-
-            responseHandler.handleResponse();
+                dos.flush();
+            } catch (IOException e) {
+                logger.error(e.getMessage());
+            }
 
         } catch (IOException e) {
             throw new RuntimeException(e);

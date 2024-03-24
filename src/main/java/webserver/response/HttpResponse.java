@@ -1,13 +1,14 @@
 package webserver.response;
 
-public abstract class HttpResponse {
-    protected String startLine;
-    protected String responseHeader;
-    protected byte[] responseBody;
+public class HttpResponse {
+    private String startLine;
+    private String responseHeader;
+    private byte[] responseBody;
 
     public HttpResponse(String startLine, String responseHeader) {
         this.startLine = startLine;
         this.responseHeader = responseHeader;
+        this.responseBody = new byte[0];
     }
 
     public HttpResponse(String startLine, String responseHeader, byte[] responseBody) {

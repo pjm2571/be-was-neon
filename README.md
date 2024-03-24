@@ -107,3 +107,17 @@ try(BufferedReader br = new BufferedReader(new InputStreamReader(in)){
 
 - resource auto close를 해주어 해결
 
+
+---
+
+# 리팩토링
+
+## 1) RootHandler
+- Root로 들어오는 요청은 뭘까?
+
+1) url 형식
+2) index.html 형식
+
+-> 따라서, url 형식이라면, default_file을 붙여주면 되고 아니라면, 그냥 쓰면 된다.
+
+-> GET 만 정의해주자
