@@ -68,5 +68,9 @@ public class HttpResponseUtils {
         return "Content-Type:" + SPACE + mimeType + CRLF + "Content-Length:" + SPACE + bodyLength + CRLF + CRLF;
     }
 
+    public static String generateResponseHeader(String redirectTarget) {
+        return "Location:" + SPACE + redirectTarget + CRLF + CRLF;
+    }
+
 
 }
