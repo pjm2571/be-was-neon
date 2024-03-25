@@ -2,6 +2,7 @@ package webserver.handler;
 
 import config.Config;
 import webserver.Url;
+import webserver.handler.file.StaticFileHandler;
 import webserver.request.HttpRequest;
 
 import org.slf4j.Logger;
@@ -23,21 +24,20 @@ public class HttpRequestHandler {
     // ...
 
     public HttpResponse handleRequest(Config config) {
-        try {
-            Url url = HttpRequestUtils.getUrl(httpRequest.getRequestLine());
-            logger.debug("Url : {}", url);
 
-            UrlHandlerFactory factory = new UrlHandlerFactory();
-
-            UrlHandler urlHandler = factory.createUrlHandler(url);
-
-            return urlHandler.handleRequest(httpRequest, config);
-        } catch (IllegalArgumentException e) {
-            // Url이 없는 경우 not found! 404
-            logger.error(e.getMessage());
-            // 404 처리!
-            return null;
+        if (HttpRequestUtils.isStaticFile(httpRequest.getRequestLine())) {
+            StaticFileHandler staticFileHandler = new StaticFileHandler();
+            return staticFileHandler.handleRequest(httpRequest, config);
         }
+
+        Url url = HttpRequestUtils.getUrl(httpRequest.getRequestLine());
+        logger.debug("Url : {}", url);
+
+        UrlHandlerFactory factory = new UrlHandlerFactory();
+
+        UrlHandler urlHandler = factory.createUrlHandler(url);
+
+        return urlHandler.handleRequest(httpRequest, config);
     }
 
 

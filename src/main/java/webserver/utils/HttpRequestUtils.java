@@ -1,26 +1,85 @@
 package webserver.utils;
 
 
+import config.Config;
 import webserver.ContentType;
+import webserver.StatusCode;
 import webserver.Url;
-import webserver.request.message.HttpRequestStartLine;
+import webserver.request.HttpRequest;
 
+import java.io.*;
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.stream.Stream;
+
+import static webserver.constants.Constants.*;
 
 public class HttpRequestUtils {
-    private static final String DOT = "\\.";
     private static final String ROOT_DIRECTORY = "/";
     private static final String DEFAULT_FILE = "/index.html";
     private static final String URL_SEPARATOR = "/";
 
-    private static final String URL_FILENAME_PATTERN = "\\/+[a-z]*.([a-z]*)"; // url만 걸러주는 필터
-
-
     /* ---------------- Request Line 파싱하는 기능 모음 ---------------- */
 
+    public static boolean isStaticFile(String requestLine) {
+        return requestLine.contains(".");
+    }
+
+    public static String getExtension(String requestLine) {
+        return requestLine.substring(requestLine.lastIndexOf(".") + 1);
+    }
+
+    public static String getMimeType(String extension) {
+        return Arrays.stream(ContentType.values())
+                .filter(type -> type.name().equalsIgnoreCase(extension))
+                .findFirst()
+                .map(ContentType::getMimeType)
+                .orElse("application/octet-stream"); // 못읽을 시, 기본값 설정
+    }
+
+    // --
+
+    public static byte[] generateStaticResponseBody(HttpRequest httpRequest, Config config) {
+        File file = new File(config.getStaticRoute() + httpRequest.getRequestLine());
+
+
+        // 404 error
+        if (!file.exists() || !file.isFile()) {
+            throw new IllegalArgumentException("[ERROR] Request 파일이 존재하지 않음 : " + file.getAbsolutePath());
+        }
+
+        try (InputStream inputStream = new FileInputStream(file);
+             BufferedInputStream bis = new BufferedInputStream(inputStream)) {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = bis.read(buffer)) != -1) {
+                bos.write(buffer, 0, bytesRead);
+            }
+            return bos.toByteArray();
+        } catch (IOException e) {   // 500 error
+            throw new RuntimeException("[ERROR] 파일을 읽는 중, 서버 오류 발생");
+        }
+    }
+    public static String generateStaticResponseHeader(HttpRequest httpRequest, int bodyLength) {
+        String extension = HttpRequestUtils.getExtension(httpRequest.getRequestLine());
+
+        String mimeType = HttpRequestUtils.getMimeType(extension);
+
+        return "Content-Type:" + SPACE + mimeType + CRLF + "Content-Length:" + SPACE + bodyLength + CRLF + CRLF;
+    }
+
+    public static String generateErrorResponseHeader(int bodyLength) {
+        return "Content-Type:" + SPACE + ContentType.html.getMimeType() + CRLF + "Content-Length:" + SPACE + bodyLength + CRLF + CRLF;
+
+    }
+
+    public static String generateResponseStartLine(StatusCode statusCode) {
+        return HTTP_VERSION + SPACE + statusCode.getCode() + SPACE + statusCode.getDescription() + CRLF;
+    }
+
+
+    // --
     public static Url getUrl(String requestLine) {
         String urlPath = getUrlPath(requestLine);
 
@@ -71,17 +130,8 @@ public class HttpRequestUtils {
         return sb.toString();
     }
 
-    public static boolean isStaticFile(String requestLine) {
-        String extension = getExtension(requestLine);   // . 이후의 확장자 파일명을 가져온다.
-
-        return Arrays.stream(ContentType.values())
-                .anyMatch(contentType -> contentType.name().equals(extension)); // 정의된 확장자 중에 있을 때는 true!
-    }
 
 
-    public static String getExtension(String requestLine) {
-        return requestLine.substring(requestLine.lastIndexOf(".") + 1);
-    }
 
     /* ---------------------------------------------------------- */
 
