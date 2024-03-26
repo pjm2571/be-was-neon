@@ -1,6 +1,5 @@
 package webserver.handler.error;
 
-import webserver.ContentType;
 import webserver.StatusCode;
 import webserver.response.HttpResponse;
 import webserver.utils.HttpRequestUtils;

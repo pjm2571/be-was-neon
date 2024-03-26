@@ -2,6 +2,7 @@ package webserver.handler.url;
 
 import config.Config;
 import db.Database;
+import db.SessionStore;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,12 +90,12 @@ public class LoginHandler implements UrlHandler {
         try {
             validateUser(user, inputId, inputPassword);
             String sid = SidGenerator.getRandomSid();
+            SessionStore.addSession(sid, user);
             header = HttpRequestUtils.generateRedirectResponseHeader(Constants.LOGIN_SUCCESS_URL, sid);
         } catch (IllegalArgumentException e) {
             logger.error(e.getMessage());
             header = HttpRequestUtils.generateRedirectResponseHeader(Constants.LOGIN_FAIL_URL);
         }
-
         return new HttpResponse(startLine, header);
     }
 

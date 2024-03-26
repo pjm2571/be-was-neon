@@ -37,19 +37,9 @@ public class ConnectionHandler implements Runnable {
             HttpRequestHandler requestHandler = new HttpRequestHandler(httpRequest);
 
             HttpResponse httpResponse = requestHandler.handleRequest(config);
+            HttpResponseHandler httpResponseHandler = new HttpResponseHandler(out);
 
-            DataOutputStream dos = new DataOutputStream(out);
-
-            try {
-                dos.writeBytes(httpResponse.getStartLine());
-                dos.writeBytes(httpResponse.getResponseHeader());
-                dos.write(httpResponse.getResponseBody(), 0, httpResponse.getResponseBody().length);
-
-                dos.flush();
-            } catch (IOException e) {
-                logger.error(e.getMessage());
-            }
-
+            httpResponseHandler.handleResponse(httpResponse);
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (IllegalArgumentException e) {
