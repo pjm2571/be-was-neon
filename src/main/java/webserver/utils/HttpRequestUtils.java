@@ -6,6 +6,7 @@ import webserver.ContentType;
 import webserver.StatusCode;
 import webserver.Url;
 import webserver.request.HttpRequest;
+import webserver.request.message.HttpRequestStartLine;
 
 import java.io.*;
 import java.util.Arrays;
@@ -67,7 +68,10 @@ public class HttpRequestUtils {
 
     public static String generateErrorResponseHeader(int bodyLength) {
         return "Content-Type:" + SPACE + ContentType.html.getMimeType() + CRLF + "Content-Length:" + SPACE + bodyLength + CRLF + CRLF;
+    }
 
+    public static String generateRedirectResponseHeader(String redirectTarget) {
+        return "Location:" + SPACE + redirectTarget + CRLF + CRLF;
     }
 
     public static String generateResponseStartLine(StatusCode statusCode) {
@@ -85,6 +89,12 @@ public class HttpRequestUtils {
                 .filter(url -> requestLine.startsWith(url.getUrlPath()))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("[404 ERROR] 해당하는 URL이 없습니다."));
+    }
+
+    public static HttpRequest convertToStaticFileRequest(HttpRequest httpRequest) {
+        String staticRequestLine = httpRequest.getRequestLine() + SLASH + DEFAULT_FILE;
+        HttpRequestStartLine startLine = new HttpRequestStartLine(httpRequest.getMethod() + SPACE + staticRequestLine + SPACE + httpRequest.getHttpVersion());
+        return new HttpRequest(startLine, httpRequest.getRequestHeader(), httpRequest.getRequestBody());
     }
 
     /* ---------------------------------------------------------- */

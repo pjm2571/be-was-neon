@@ -13,7 +13,7 @@ import webserver.request.message.HttpRequestStartLine;
 import webserver.response.HttpResponse;
 import webserver.utils.HttpRequestUtils;
 
-import static webserver.constants.Constants.*;
+import static webserver.utils.HttpRequestUtils.convertToStaticFileRequest;
 
 public class HttpRequestHandler {
     private static final Logger logger = LoggerFactory.getLogger(HttpRequestHandler.class);
@@ -40,6 +40,7 @@ public class HttpRequestHandler {
         }
 
         // 2) 정적 파일이 아닌 경우 동적으로 동작
+
         // 2-1) Root Url일 경우 바로 Static으로 동작
         if (HttpRequestUtils.isRootUrl(requestLine)) {
             StaticFileHandler staticFileHandler = new StaticFileHandler();
@@ -65,12 +66,6 @@ public class HttpRequestHandler {
         }
 
 
-    }
-
-    private HttpRequest convertToStaticFileRequest(HttpRequest httpRequest) {
-        String staticRequestLine = httpRequest.getRequestLine() + DEFAULT_FILE;
-        HttpRequestStartLine startLine = new HttpRequestStartLine(httpRequest.getMethod() + SPACE + staticRequestLine + SPACE + httpRequest.getHttpVersion());
-        return new HttpRequest(startLine, httpRequest.getRequestHeader(), httpRequest.getRequestBody());
     }
 
 

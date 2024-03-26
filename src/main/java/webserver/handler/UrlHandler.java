@@ -6,5 +6,4 @@ import webserver.response.HttpResponse;
 
 public interface UrlHandler {
     HttpResponse handleRequest(HttpRequest httpRequest, Config config);
-
 }
