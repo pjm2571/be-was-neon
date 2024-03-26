@@ -8,7 +8,6 @@ import webserver.request.message.HttpRequestHeader;
 import webserver.request.message.HttpRequestStartLine;
 
 public class HttpRequest {
-    private static final Logger logger = LoggerFactory.getLogger(HttpRequest.class);
 
     private HttpRequestStartLine startLine;
     private HttpRequestHeader header;
@@ -18,7 +17,7 @@ public class HttpRequest {
         this.startLine = startLine;
         this.header = header;
         this.body = body;
-        logger.debug("Request : {}", startLine);
+
     }
 
     public HttpMethod getMethod() {

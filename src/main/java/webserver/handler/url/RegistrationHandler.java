@@ -18,7 +18,6 @@ import webserver.utils.QueryUtils;
 
 import java.util.Arrays;
 import java.util.Map;
-import java.util.function.Function;
 
 public class RegistrationHandler implements UrlHandler {
     private static final Logger logger = LoggerFactory.getLogger(RegistrationHandler.class);
@@ -49,7 +48,7 @@ public class RegistrationHandler implements UrlHandler {
         if (isValidUrl(registrationUrl)) {
             createUser(httpRequest);    // 유저 생성
             String startLine = HttpRequestUtils.generateResponseStartLine(StatusCode.FOUND);
-            String header = HttpRequestUtils.generateRedirectResponseHeader(Constants.ROOT_DIRECTORY);
+            String header = HttpRequestUtils.generateRedirectResponseHeader(Constants.ROOT_URL);
             return new HttpResponse(startLine, header);
         }
         return ErrorHandler.get404Response();

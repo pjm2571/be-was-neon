@@ -74,6 +74,11 @@ public class HttpRequestUtils {
         return "Location:" + SPACE + redirectTarget + CRLF + CRLF;
     }
 
+    public static String generateRedirectResponseHeader(String redirectTarget, String sid) {
+        return "Location:" + SPACE + redirectTarget + CRLF
+                + "Set-Cookie:" + SPACE + "sid=" + sid + ";" + SPACE + "Path=/" + CRLF + CRLF;
+    }
+
     public static String generateResponseStartLine(StatusCode statusCode) {
         return HTTP_VERSION + SPACE + statusCode.getCode() + SPACE + statusCode.getDescription() + CRLF;
     }
@@ -81,7 +86,7 @@ public class HttpRequestUtils {
     // --
 
     public static boolean isRootUrl(String requestLine) {
-        return requestLine.equals(ROOT_DIRECTORY);
+        return requestLine.equals(ROOT_URL);
     }
 
     public static Url getUrl(String requestLine) {

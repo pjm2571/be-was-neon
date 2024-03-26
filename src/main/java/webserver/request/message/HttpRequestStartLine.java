@@ -1,12 +1,19 @@
 package webserver.request.message;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import webserver.request.HttpRequest;
+
 public class HttpRequestStartLine {
+    private static final Logger logger = LoggerFactory.getLogger(HttpRequestStartLine.class);
+
     private HttpMethod httpMethod;
     private String requestLine;
     private String httpVersion;
 
     public HttpRequestStartLine(String startLine) {
         setStartLine(startLine);
+        logger.debug("Request : {}", startLine);
     }
 
     public HttpMethod getHttpMethod() {
