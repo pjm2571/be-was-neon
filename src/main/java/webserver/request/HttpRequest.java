@@ -25,6 +25,14 @@ public class HttpRequest {
         return startLine.getHttpMethod();
     }
 
+    public HttpRequestHeader getRequestHeader() {
+        return header;
+    }
+
+    public HttpRequestBody getRequestBody() {
+        return body;
+    }
+
     public String getRequestLine() {
         return startLine.getRequestLine();
     }

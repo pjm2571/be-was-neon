@@ -1,10 +1,8 @@
 package webserver;
 
 public enum Url {
-    LOGIN("login"),
-    REGISTRATION("registration"),
-    ROOT("/");
-
+    LOGIN("/login"),
+    REGISTRATION("/registration");
     private final String urlPath;
 
     Url(String urlPath) {
@@ -14,5 +12,6 @@ public enum Url {
     public String getUrlPath() {
         return urlPath;
     }
+
 
 }

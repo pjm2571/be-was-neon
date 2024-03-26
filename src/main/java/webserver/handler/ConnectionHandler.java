@@ -26,6 +26,8 @@ public class ConnectionHandler implements Runnable {
     public void run() {
         logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
                 connection.getPort());
+
+
         // Request Handler 생성
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
 
