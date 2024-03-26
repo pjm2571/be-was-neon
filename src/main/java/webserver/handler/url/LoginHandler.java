@@ -24,7 +24,11 @@ public class LoginHandler implements UrlHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginHandler.class);
 
-    private enum LoginUrl {
+    private enum LoginGetUrl {
+        login_failed
+    }
+
+    private enum LoginPostUrl {
         loginUser
     }
 
@@ -41,12 +45,22 @@ public class LoginHandler implements UrlHandler {
             StaticFileHandler staticFileHandler = new StaticFileHandler();
             return staticFileHandler.handleRequest(HttpRequestUtils.convertToStaticFileRequest(httpRequest), config);
         }
+        if (isValidGetUrl(getLoginUrl(httpRequest.getRequestLine()))) {
+            StaticFileHandler staticFileHandler = new StaticFileHandler();
+            return staticFileHandler.handleRequest(HttpRequestUtils.convertToStaticFileRequest(httpRequest), config);
+        }
         return ErrorHandler.get404Response();   // URL 이외의 요청은 404!
     }
 
-    private boolean isValidUrl(String url) {
-        return Arrays.stream(LoginUrl.values())
-                .anyMatch(registrationUrl -> registrationUrl.name().equals(url));
+
+    private boolean isValidGetUrl(String url) {
+        return Arrays.stream(LoginGetUrl.values())
+                .anyMatch(loginUrl -> loginUrl.name().equals(url));
+    }
+
+    private boolean isValidPostUrl(String url) {
+        return Arrays.stream(LoginPostUrl.values())
+                .anyMatch(loginUrl -> loginUrl.name().equals(url));
     }
 
     private String getLoginUrl(String requestLine) {
@@ -57,8 +71,7 @@ public class LoginHandler implements UrlHandler {
     private HttpResponse handlePost(HttpRequest httpRequest, Config config) {
         String loginUrl = getLoginUrl(httpRequest.getRequestLine());
 
-        if (isValidUrl(loginUrl)) {
-            // login
+        if (isValidPostUrl(loginUrl)) {
             return loginUser(httpRequest);
         }
         return ErrorHandler.get404Response();
