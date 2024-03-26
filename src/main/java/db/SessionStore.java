@@ -13,6 +13,10 @@ public class SessionStore {
                 .anyMatch(sessionId -> sessionId.equals(sid));
     }
 
+    public static void expireSid(String sid) {
+        sessions.remove(sid);
+    }
+
     public static void addSession(String sessionId, User user) {
         sessions.put(sessionId, user);
     }

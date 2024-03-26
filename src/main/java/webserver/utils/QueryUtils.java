@@ -9,12 +9,6 @@ public class QueryUtils {
 
     private final static String QUERY_SEPARATOR = "=";
     private final static String PARAM_SEPARATOR = "&";
-    private final static String QUERY_SEQUENCE = "\\?";
-
-    public static String getQueryLine(String queryLine) {
-        String[] tokens = queryLine.split(QUERY_SEQUENCE);
-        return tokens[1];
-    }
 
     public static Map<String, String> getQueries(String queryLine) {
         return Arrays.stream(queryLine.split(PARAM_SEPARATOR))

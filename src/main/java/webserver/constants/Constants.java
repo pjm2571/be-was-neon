@@ -9,4 +9,5 @@ public class Constants {
     public static final String LOGIN_SUCCESS_URL = "/main";
     public static final String LOGIN_FAIL_URL = "/login/login_failed";
     public static final String SLASH = "/";
+    public static final String COOKIE = "Cookie";
 }

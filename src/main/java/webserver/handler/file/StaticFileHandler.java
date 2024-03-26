@@ -9,12 +9,8 @@ import webserver.handler.error.ErrorHandler;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 import webserver.utils.HttpRequestUtils;
-import webserver.utils.HttpResponseUtils;
 
-import java.io.*;
 import java.util.Arrays;
-
-import static webserver.constants.Constants.*;
 
 public class StaticFileHandler {
     private static final Logger logger = LoggerFactory.getLogger(StaticFileHandler.class);

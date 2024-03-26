@@ -3,7 +3,8 @@ package webserver;
 public enum Url {
     LOGIN("/login"),
     REGISTRATION("/registration"),
-    MAIN("/main");
+    MAIN("/main"),
+    LOGOUT("/logout");
 
     private final String urlPath;
 

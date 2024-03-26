@@ -1,6 +1,7 @@
 package webserver.handler;
 
 import webserver.handler.url.LoginHandler;
+import webserver.handler.url.LogoutHandler;
 import webserver.handler.url.MainHandler;
 import webserver.handler.url.RegistrationHandler;
 import webserver.Url;
@@ -11,6 +12,7 @@ public class UrlHandlerFactory {
             case REGISTRATION -> new RegistrationHandler();
             case LOGIN -> new LoginHandler();
             case MAIN -> new MainHandler();
+            case LOGOUT -> new LogoutHandler();
         };
     }
 }

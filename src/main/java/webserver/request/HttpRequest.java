@@ -17,7 +17,6 @@ public class HttpRequest {
         this.startLine = startLine;
         this.header = header;
         this.body = body;
-
     }
 
     public HttpMethod getMethod() {
