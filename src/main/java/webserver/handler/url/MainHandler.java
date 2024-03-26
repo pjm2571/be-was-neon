@@ -2,6 +2,8 @@ package webserver.handler.url;
 
 import config.Config;
 import db.SessionStore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import webserver.StatusCode;
 import webserver.Url;
 import webserver.constants.Constants;
@@ -14,6 +16,8 @@ import webserver.utils.HttpRequestUtils;
 import webserver.utils.SidUtils;
 
 public class MainHandler implements UrlHandler {
+    private static final Logger logger = LoggerFactory.getLogger(MainHandler.class);
+
 
     @Override
     public HttpResponse handleRequest(HttpRequest httpRequest, Config config) {
@@ -41,6 +45,9 @@ public class MainHandler implements UrlHandler {
             String sid = getSid(httpRequest.getHeaderValue(Constants.COOKIE));
             return SessionStore.sessionIdExists(sid);
         } catch (IllegalArgumentException e) {
+            // Cookie가 없거나
+            // 존재하지 않는 Sid로 접속하는 경우
+            logger.error(e.getMessage());
             return false;
         }
     }

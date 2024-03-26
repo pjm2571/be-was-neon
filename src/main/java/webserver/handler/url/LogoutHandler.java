@@ -2,6 +2,8 @@ package webserver.handler.url;
 
 import config.Config;
 import db.SessionStore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import webserver.StatusCode;
 import webserver.Url;
 import webserver.constants.Constants;
@@ -13,6 +15,8 @@ import webserver.utils.HttpRequestUtils;
 import webserver.utils.SidUtils;
 
 public class LogoutHandler implements UrlHandler {
+    private static final Logger logger = LoggerFactory.getLogger(LogoutHandler.class);
+
     @Override
     public HttpResponse handleRequest(HttpRequest httpRequest, Config config) {
         return switch (httpRequest.getMethod()) {
@@ -45,6 +49,7 @@ public class LogoutHandler implements UrlHandler {
         } catch (IllegalArgumentException e) {
             // 1) 쿠키가 없는 경우
             // 2) 저장된 세션 중에 sid가 없는 경우
+            logger.error(e.getMessage());
             return HttpRequestUtils.generateRedirectResponseHeader(Constants.ROOT_URL);
         }
     }
