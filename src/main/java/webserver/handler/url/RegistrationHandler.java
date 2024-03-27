@@ -14,6 +14,7 @@ import webserver.handler.file.StaticFileHandler;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 import webserver.utils.HttpRequestUtils;
+import webserver.utils.HttpResponseUtils;
 import webserver.utils.QueryUtils;
 
 import java.util.Arrays;
@@ -47,8 +48,8 @@ public class RegistrationHandler implements UrlHandler {
 
         if (isValidUrl(registrationUrl)) {
             createUser(httpRequest);    // 유저 생성
-            String startLine = HttpRequestUtils.generateResponseStartLine(StatusCode.FOUND);
-            String header = HttpRequestUtils.generateRedirectResponseHeader(Constants.ROOT_URL);
+            String startLine = HttpResponseUtils.generateResponseStartLine(StatusCode.FOUND);
+            String header = HttpResponseUtils.generateRedirectResponseHeader(Constants.ROOT_URL);
             return new HttpResponse(startLine, header);
         }
         return ErrorHandler.get404Response();

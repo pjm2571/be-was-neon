@@ -12,6 +12,7 @@ import webserver.handler.error.ErrorHandler;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 import webserver.utils.HttpRequestUtils;
+import webserver.utils.HttpResponseUtils;
 import webserver.utils.SidUtils;
 
 public class LogoutHandler implements UrlHandler {
@@ -33,7 +34,7 @@ public class LogoutHandler implements UrlHandler {
     }
 
     private HttpResponse logoutUser(HttpRequest httpRequest) {
-        String startLine = HttpRequestUtils.generateResponseStartLine(StatusCode.FOUND);
+        String startLine = HttpResponseUtils.generateResponseStartLine(StatusCode.FOUND);
         String header = validateCookie(httpRequest);
         return new HttpResponse(startLine, header);
     }
@@ -46,15 +47,15 @@ public class LogoutHandler implements UrlHandler {
             // 2) Session.Store에서 sid를 삭제해야 한다.
             SessionStore.expireSid(sid);
 
-            String header = HttpRequestUtils.generateRedirectResponseHeader(Constants.ROOT_URL);
-            header = HttpRequestUtils.setCookieHeader(header, expireSid);
+            String header = HttpResponseUtils.generateRedirectResponseHeader(Constants.ROOT_URL);
+            header = HttpResponseUtils.setCookieHeader(header, expireSid);
 
             return header;
         } catch (IllegalArgumentException e) {
             // 1) 쿠키가 없는 경우
             // 2) 저장된 세션 중에 sid가 없는 경우
             logger.error(e.getMessage());
-            return HttpRequestUtils.generateRedirectResponseHeader(Constants.ROOT_URL);
+            return HttpResponseUtils.generateRedirectResponseHeader(Constants.ROOT_URL);
         }
     }
 

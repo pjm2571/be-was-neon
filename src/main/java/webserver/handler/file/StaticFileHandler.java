@@ -9,6 +9,7 @@ import webserver.handler.error.ErrorHandler;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 import webserver.utils.HttpRequestUtils;
+import webserver.utils.HttpResponseUtils;
 
 import java.util.Arrays;
 
@@ -22,13 +23,13 @@ public class StaticFileHandler {
 
             // 2) 파일 읽기 -> 없다면 IllegalArgumentException [404]
             //            -> 읽다가 예외 발생 시 RuntimeException [500]
-            byte[] responseBody = HttpRequestUtils.generateStaticResponseBody(httpRequest, config);
+            byte[] responseBody = HttpResponseUtils.generateStaticResponseBody(httpRequest, config);
 
             // 3) header 작성하기
-            String header = HttpRequestUtils.generateStaticResponseHeader(httpRequest, responseBody.length);
+            String header = HttpResponseUtils.generateStaticResponseHeader(httpRequest, responseBody.length);
 
             // 4) startLine 작성하기
-            String startLine = HttpRequestUtils.generateResponseStartLine(StatusCode.OK);
+            String startLine = HttpResponseUtils.generateResponseStartLine(StatusCode.OK);
 
             // 5) response 객체 리턴
             return new HttpResponse(startLine, header, responseBody);

@@ -13,6 +13,7 @@ import webserver.handler.file.StaticFileHandler;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 import webserver.utils.HttpRequestUtils;
+import webserver.utils.HttpResponseUtils;
 import webserver.utils.SidUtils;
 
 public class MainHandler implements UrlHandler {
@@ -29,8 +30,8 @@ public class MainHandler implements UrlHandler {
 
     private HttpResponse handleGet(HttpRequest httpRequest, Config config) {
         if (!isLoggedIn(httpRequest)) { // 로그인되어있지 않은 경우 접근한다면 root로 리다이렉트
-            String startLine = HttpRequestUtils.generateResponseStartLine(StatusCode.FOUND);
-            String header = HttpRequestUtils.generateRedirectResponseHeader(Constants.ROOT_URL);
+            String startLine = HttpResponseUtils.generateResponseStartLine(StatusCode.FOUND);
+            String header = HttpResponseUtils.generateRedirectResponseHeader(Constants.ROOT_URL);
             return new HttpResponse(startLine, header);
         }
         if (httpRequest.getRequestLine().equals(Url.MAIN.getUrlPath())) {   // url경로와 같다면 staticFileHandler!

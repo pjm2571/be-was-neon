@@ -16,6 +16,7 @@ import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 import webserver.sid.SidGenerator;
 import webserver.utils.HttpRequestUtils;
+import webserver.utils.HttpResponseUtils;
 import webserver.utils.QueryUtils;
 
 import java.util.Arrays;
@@ -85,17 +86,17 @@ public class LoginHandler implements UrlHandler {
         String inputPassword = queries.get("password");
         User user = Database.findUserById(inputId);
 
-        String startLine = HttpRequestUtils.generateResponseStartLine(StatusCode.FOUND);
+        String startLine = HttpResponseUtils.generateResponseStartLine(StatusCode.FOUND);
         String header;
         try {
             validateUser(user, inputId, inputPassword);
             String sid = SidGenerator.getRandomSid();
             SessionStore.addSession(sid, user);
-            header = HttpRequestUtils.generateRedirectResponseHeader(Constants.LOGIN_SUCCESS_URL);
-            header = HttpRequestUtils.setCookieHeader(header, sid);
+            header = HttpResponseUtils.generateRedirectResponseHeader(Constants.LOGIN_SUCCESS_URL);
+            header = HttpResponseUtils.setCookieHeader(header, sid);
         } catch (IllegalArgumentException e) {
             logger.error(e.getMessage());
-            header = HttpRequestUtils.generateRedirectResponseHeader(Constants.LOGIN_FAIL_URL);
+            header = HttpResponseUtils.generateRedirectResponseHeader(Constants.LOGIN_FAIL_URL);
         }
         return new HttpResponse(startLine, header);
     }
