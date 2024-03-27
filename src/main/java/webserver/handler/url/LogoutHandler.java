@@ -45,7 +45,11 @@ public class LogoutHandler implements UrlHandler {
             String expireSid = getExpireSid(sid);
             // 2) Session.Store에서 sid를 삭제해야 한다.
             SessionStore.expireSid(sid);
-            return HttpRequestUtils.generateRedirectResponseHeader(Constants.ROOT_URL, expireSid);
+
+            String header = HttpRequestUtils.generateRedirectResponseHeader(Constants.ROOT_URL);
+            header = HttpRequestUtils.setCookieHeader(header, expireSid);
+
+            return header;
         } catch (IllegalArgumentException e) {
             // 1) 쿠키가 없는 경우
             // 2) 저장된 세션 중에 sid가 없는 경우

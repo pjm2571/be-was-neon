@@ -91,7 +91,8 @@ public class LoginHandler implements UrlHandler {
             validateUser(user, inputId, inputPassword);
             String sid = SidGenerator.getRandomSid();
             SessionStore.addSession(sid, user);
-            header = HttpRequestUtils.generateRedirectResponseHeader(Constants.LOGIN_SUCCESS_URL, sid);
+            header = HttpRequestUtils.generateRedirectResponseHeader(Constants.LOGIN_SUCCESS_URL);
+            header = HttpRequestUtils.setCookieHeader(header, sid);
         } catch (IllegalArgumentException e) {
             logger.error(e.getMessage());
             header = HttpRequestUtils.generateRedirectResponseHeader(Constants.LOGIN_FAIL_URL);

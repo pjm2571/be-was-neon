@@ -74,10 +74,12 @@ public class HttpRequestUtils {
         return "Location:" + SPACE + redirectTarget + CRLF + CRLF;
     }
 
-    public static String generateRedirectResponseHeader(String redirectTarget, String sid) {
-        return "Location:" + SPACE + redirectTarget + CRLF
-                + "Set-Cookie:" + SPACE + "sid=" + sid + ";" + SPACE + "Path=/" + CRLF + CRLF;
+    public static String setCookieHeader(String header, String sid) {
+        int length = CRLF.length();
+        header = header.substring(0, header.length() - length);
+        return header + "Set-Cookie:" + SPACE + "sid=" + sid + ";" + SPACE + "Path=/" + CRLF + CRLF;
     }
+
 
     public static String generateResponseStartLine(StatusCode statusCode) {
         return HTTP_VERSION + SPACE + statusCode.getCode() + SPACE + statusCode.getDescription() + CRLF;
