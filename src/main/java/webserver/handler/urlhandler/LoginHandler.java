@@ -1,4 +1,4 @@
-package webserver.handler.url;
+package webserver.handler.urlhandler;
 
 import config.Config;
 import db.Database;
@@ -10,8 +10,8 @@ import webserver.StatusCode;
 import webserver.Url;
 import webserver.constants.Constants;
 import webserver.handler.UrlHandler;
-import webserver.handler.error.ErrorHandler;
-import webserver.handler.file.StaticFileHandler;
+import webserver.handler.errorhandler.ErrorHandler;
+import webserver.handler.filehandler.StaticFileHandler;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 import webserver.sid.SidGenerator;

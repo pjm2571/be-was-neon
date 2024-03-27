@@ -2,14 +2,12 @@ package webserver.handler;
 
 import config.Config;
 import webserver.Url;
-import webserver.constants.Constants;
-import webserver.handler.error.ErrorHandler;
-import webserver.handler.file.StaticFileHandler;
+import webserver.handler.errorhandler.ErrorHandler;
+import webserver.handler.filehandler.StaticFileHandler;
 import webserver.request.HttpRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.request.message.HttpRequestStartLine;
 import webserver.response.HttpResponse;
 import webserver.utils.HttpRequestUtils;
 

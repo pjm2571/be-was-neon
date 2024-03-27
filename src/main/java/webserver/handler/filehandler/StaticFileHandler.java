@@ -1,11 +1,11 @@
-package webserver.handler.file;
+package webserver.handler.filehandler;
 
 import config.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.ContentType;
 import webserver.StatusCode;
-import webserver.handler.error.ErrorHandler;
+import webserver.handler.errorhandler.ErrorHandler;
 import webserver.request.HttpRequest;
 import webserver.response.HttpResponse;
 import webserver.utils.HttpRequestUtils;

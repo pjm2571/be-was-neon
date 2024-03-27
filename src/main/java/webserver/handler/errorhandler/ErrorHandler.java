@@ -1,11 +1,8 @@
-package webserver.handler.error;
+package webserver.handler.errorhandler;
 
 import webserver.StatusCode;
 import webserver.response.HttpResponse;
-import webserver.utils.HttpRequestUtils;
 import webserver.utils.HttpResponseUtils;
-
-import static webserver.constants.Constants.*;
 
 public class ErrorHandler {
     public static HttpResponse get404Response() {

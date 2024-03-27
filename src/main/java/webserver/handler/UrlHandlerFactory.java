@@ -1,9 +1,9 @@
 package webserver.handler;
 
-import webserver.handler.url.LoginHandler;
-import webserver.handler.url.LogoutHandler;
-import webserver.handler.url.MainHandler;
-import webserver.handler.url.RegistrationHandler;
+import webserver.handler.urlhandler.LoginHandler;
+import webserver.handler.urlhandler.LogoutHandler;
+import webserver.handler.urlhandler.MainHandler;
+import webserver.handler.urlhandler.RegistrationHandler;
 import webserver.Url;
 
 public class UrlHandlerFactory {
