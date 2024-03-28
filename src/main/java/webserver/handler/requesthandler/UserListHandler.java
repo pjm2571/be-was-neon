@@ -16,7 +16,7 @@ import java.io.*;
 import java.util.StringJoiner;
 
 public class UserListHandler implements HttpRequestHandler {
-    private static final String ROOT_URL = "/";
+    private static final String REDIRECT_URL = "/login";
     private static final String COOKIE = "Cookie";
 
     private static final String PATTERN = "<ul(?:\\s+class=\"ul-user\"*\")?>[\\s\\S]*?</ul>";
@@ -41,7 +41,7 @@ public class UserListHandler implements HttpRequestHandler {
             return dynamicFileHandler.handleRequest(replacement, PATTERN);
         }
         String startLine = HttpResponseUtils.generateResponseStartLine(StatusCode.FOUND);
-        String header = HttpResponseUtils.generateRedirectResponseHeader(ROOT_URL);
+        String header = HttpResponseUtils.generateRedirectResponseHeader(REDIRECT_URL);
         return new HttpResponse(startLine, header);
     }
 
