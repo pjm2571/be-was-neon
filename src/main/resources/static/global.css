@@ -48,6 +48,14 @@
   text-align: center;
 }
 
+.ul-user{
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 38.19px;
+  padding: 64px;
+  text-align: center;
+}
+
 .btn {
   border: none;
   border-radius: 8px;

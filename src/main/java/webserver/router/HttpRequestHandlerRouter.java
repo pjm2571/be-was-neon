@@ -1,18 +1,14 @@
 package webserver.router;
 
 import webserver.handler.HttpRequestHandler;
-import webserver.handler.requesthandler.LogoutHandler;
-import webserver.handler.requesthandler.ErrorHandler;
-import webserver.handler.requesthandler.LoginHandler;
-import webserver.handler.requesthandler.RegistrationHandler;
-import webserver.handler.requesthandler.RootHandler;
-import webserver.handler.requesthandler.StaticFileHandler;
+import webserver.handler.requesthandler.*;
 import webserver.http.request.HttpRequest;
 
 public class HttpRequestHandlerRouter {
     private static final String REGISTRATION = "/registration";
     private static final String LOGIN = "/login";
     private static final String LOGOUT = "/logout";
+    private static final String USER_LIST = "/user/list";
     private static final String ROOT = "/";
 
     public HttpRequestHandler getRequestHandler(HttpRequest httpRequest) {
@@ -29,6 +25,7 @@ public class HttpRequestHandlerRouter {
             case REGISTRATION -> new RegistrationHandler();
             case LOGIN -> new LoginHandler();
             case LOGOUT -> new LogoutHandler();
+            case USER_LIST -> new UserListHandler();
             default -> new ErrorHandler();
         };
     }
