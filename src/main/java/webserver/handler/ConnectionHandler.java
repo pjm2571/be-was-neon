@@ -7,8 +7,8 @@ import config.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.reader.HttpRequestReader;
-import webserver.request.HttpRequest;
-import webserver.response.HttpResponse;
+import webserver.http.request.HttpRequest;
+import webserver.http.response.HttpResponse;
 import webserver.router.HttpRequestHandlerRouter;
 
 public class ConnectionHandler implements Runnable {
@@ -46,7 +46,6 @@ public class ConnectionHandler implements Runnable {
 
             // httpReuqestHandler가 동작 -> HttpResponse 객체를 생성한다.
             HttpResponse httpResponse = httpRequestHandler.handleRequest(httpRequest, config);
-
 
             HttpResponseHandler httpResponseHandler = new HttpResponseHandler(out);
 

@@ -3,8 +3,8 @@ package webserver.utils;
 import config.Config;
 import webserver.ContentType;
 import webserver.StatusCode;
-import webserver.request.HttpRequest;
-import webserver.response.HttpResponse;
+import webserver.http.request.HttpRequest;
+import webserver.http.response.HttpResponse;
 
 import java.io.*;
 

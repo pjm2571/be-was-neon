@@ -7,7 +7,7 @@ import webserver.handler.requesthandler.LoginHandler;
 import webserver.handler.requesthandler.RegistrationHandler;
 import webserver.handler.requesthandler.RootHandler;
 import webserver.handler.requesthandler.StaticFileHandler;
-import webserver.request.HttpRequest;
+import webserver.http.request.HttpRequest;
 
 public class HttpRequestHandlerRouter {
     private static final String REGISTRATION = "/registration";

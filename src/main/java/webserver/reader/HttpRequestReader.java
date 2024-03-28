@@ -12,8 +12,11 @@ import java.util.Map;
 import config.Config;
 
 /* 웹 서버의 HTTP 요청 객체 및 관련 클래스 */
-import webserver.request.HttpRequest;
-import webserver.request.message.*;
+import webserver.http.request.HttpRequest;
+import webserver.http.request.message.HttpMethod;
+import webserver.http.request.message.HttpRequestBody;
+import webserver.http.request.message.HttpRequestHeader;
+import webserver.http.request.message.HttpRequestStartLine;
 import webserver.utils.HeaderUtils;
 
 public class HttpRequestReader {

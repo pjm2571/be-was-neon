@@ -1,14 +1,10 @@
 package webserver.utils;
 
 
-import config.Config;
 import webserver.ContentType;
-import webserver.StatusCode;
-import webserver.Url;
-import webserver.request.HttpRequest;
-import webserver.request.message.HttpRequestStartLine;
+import webserver.http.request.HttpRequest;
+import webserver.http.request.message.HttpRequestStartLine;
 
-import java.io.*;
 import java.util.Arrays;
 
 
