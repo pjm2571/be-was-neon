@@ -39,6 +39,15 @@
   text-align: center;
 }
 
+.fail-title {
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 38.19px;
+  padding: 10px 0;
+  color: red;
+  text-align: center;
+}
+
 .btn {
   border: none;
   border-radius: 8px;
