@@ -6,11 +6,9 @@ import java.net.Socket;
 import config.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.parser.RequestHandlerParser;
-import webserver.parser.ResponseHandlerParser;
-import webserver.handler.request.RequestHandler;
-import webserver.handler.response.ResponseHandler;
+import webserver.reader.HttpRequestReader;
 import webserver.request.HttpRequest;
+import webserver.response.HttpResponse;
 
 public class ConnectionHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(ConnectionHandler.class);
@@ -28,22 +26,20 @@ public class ConnectionHandler implements Runnable {
     public void run() {
         logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
                 connection.getPort());
+
+
         // Request Handler 생성
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
 
-            RequestHandlerParser requestHandlerParser = new RequestHandlerParser(in, config);
+            HttpRequestReader requestReader = new HttpRequestReader(in, config);    // InputStream의 값을 모두 읽음
 
-            RequestHandler requestHandler = requestHandlerParser.getRequestHandler();
+            HttpRequest httpRequest = requestReader.getRequest();   // 읽은 후, HttpRequest 객체를 생성함
+            HttpRequestHandler requestHandler = new HttpRequestHandler(httpRequest);
 
-            HttpRequest httpRequest = requestHandler.getHttpRequest();
+            HttpResponse httpResponse = requestHandler.handleRequest(config);
+            HttpResponseHandler httpResponseHandler = new HttpResponseHandler(out);
 
-
-            ResponseHandlerParser responseHandlerParser = new ResponseHandlerParser(out, config, httpRequest);
-
-            ResponseHandler responseHandler = responseHandlerParser.getResponseHandler();
-
-            responseHandler.handleResponse();
-
+            httpResponseHandler.handleResponse(httpResponse);
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (IllegalArgumentException e) {

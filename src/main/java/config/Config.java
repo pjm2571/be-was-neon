@@ -4,9 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Map;
 
 public class Config {
@@ -26,13 +24,15 @@ public class Config {
     }
 
     private Map<String, Object> getYamlConfigs() {
-        try {
-            InputStream inputStream = new FileInputStream(YAML_FILE);
+        try (InputStream inputStream = new FileInputStream(YAML_FILE)) {
             Yaml yaml = new Yaml();
             return yaml.load(inputStream);
         } catch (FileNotFoundException e) {
             logger.error("[ERROR] config.yaml 파일을 찾을 수 없습니다: " + YAML_FILE);
             throw new IllegalArgumentException();
+        } catch (IOException e) {
+            logger.error("[ERROR] IO 오류가 발생했습니다: " + e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 

@@ -2,39 +2,49 @@ package webserver.request;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import webserver.utils.RequestUtils;
+import webserver.request.message.HttpMethod;
+import webserver.request.message.HttpRequestBody;
+import webserver.request.message.HttpRequestHeader;
+import webserver.request.message.HttpRequestStartLine;
 
-import java.util.Map;
+public class HttpRequest {
 
-public abstract class HttpRequest {
-    private static final Logger logger = LoggerFactory.getLogger(HttpRequest.class);
+    private HttpRequestStartLine startLine;
+    private HttpRequestHeader header;
+    private HttpRequestBody body;
 
-    protected String startLine;
-    protected Map<String, String> headers;
-    protected String body;
-
-    public HttpRequest(String startLine, Map<String, String> headers) {
+    public HttpRequest(HttpRequestStartLine startLine, HttpRequestHeader header, HttpRequestBody body) {
         this.startLine = startLine;
-        this.headers = headers;
-        logger.debug("Request StartLine : {}", startLine);
-        headers.forEach((key, value) -> logger.debug("Header : {} : {}", key, value));
-    }
-
-    public HttpRequest(String startLine, Map<String, String> headers, String body) {
-        this.startLine = startLine;
-        this.headers = headers;
+        this.header = header;
         this.body = body;
-        logger.debug("Request StartLine : {}", startLine);
-        headers.forEach((key, value) -> logger.debug("Header : {} : {}", key, value));
-        logger.debug("Request Body : {}", body);
     }
 
-    public String getRequestTarget() {
-        return RequestUtils.getRequestTarget(startLine);
+    public HttpMethod getMethod() {
+        return startLine.getHttpMethod();
     }
 
-    public Map<String, String> getHeaders() {
-        return headers;
+    public HttpRequestHeader getRequestHeader() {
+        return header;
+    }
+
+    public HttpRequestBody getRequestBody() {
+        return body;
+    }
+
+    public String getRequestLine() {
+        return startLine.getRequestLine();
+    }
+
+    public String getHttpVersion() {
+        return startLine.getHttpVersion();
+    }
+
+    public String getHeaderValue(String key) {
+        return header.getValue(key);
+    }
+
+    public String getBody() {
+        return body.getBody();
     }
 
 }
