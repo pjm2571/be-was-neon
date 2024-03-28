@@ -15,11 +15,9 @@ public class ConnectionHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(ConnectionHandler.class);
 
     private Socket connection;
-    private Config config;
 
-    public ConnectionHandler(Socket connection, Config config) {
+    public ConnectionHandler(Socket connection) {
         this.connection = connection;
-        this.config = config;
     }
 
 
@@ -33,7 +31,7 @@ public class ConnectionHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
 
             // InputStream을 읽어 HttpRequest 객체를 만들어내는 클래스
-            HttpRequestReader requestReader = new HttpRequestReader(in, config);
+            HttpRequestReader requestReader = new HttpRequestReader(in);
 
             // HttpRequest 객체 생성
             HttpRequest httpRequest = requestReader.getRequest();   // 읽은 후, HttpRequest 객체를 생성함
@@ -45,7 +43,7 @@ public class ConnectionHandler implements Runnable {
             HttpRequestHandler httpRequestHandler = handlerRouter.getRequestHandler(httpRequest);
 
             // httpReuqestHandler가 동작 -> HttpResponse 객체를 생성한다.
-            HttpResponse httpResponse = httpRequestHandler.handleRequest(httpRequest, config);
+            HttpResponse httpResponse = httpRequestHandler.handleRequest(httpRequest);
 
             HttpResponseHandler httpResponseHandler = new HttpResponseHandler(out);
 

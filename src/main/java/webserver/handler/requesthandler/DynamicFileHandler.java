@@ -15,9 +15,9 @@ public class DynamicFileHandler implements HttpRequestHandler {
     private static final Logger logger = LoggerFactory.getLogger(DynamicFileHandler.class);
 
     @Override
-    public HttpResponse handleRequest(HttpRequest httpRequest, Config config) {
+    public HttpResponse handleRequest(HttpRequest httpRequest) {
         try {
-            return generateDynamicFileResponse(httpRequest, config);
+            return generateDynamicFileResponse(httpRequest);
         } catch (IllegalArgumentException e) {
             logger.error(e.getMessage());
             return HttpResponseUtils.get404Response(); // 파일을 못찾으면 404 처리
@@ -27,8 +27,8 @@ public class DynamicFileHandler implements HttpRequestHandler {
         }
     }
 
-    private HttpResponse generateDynamicFileResponse(HttpRequest httpRequest, Config config) {
-        byte[] responseBody = getDynamicFileContent(httpRequest, config).getBytes();
+    private HttpResponse generateDynamicFileResponse(HttpRequest httpRequest) {
+        byte[] responseBody = getDynamicFileContent(httpRequest).getBytes();
         // 3) header 작성하기
         String header = HttpResponseUtils.generateStaticResponseHeader(httpRequest, responseBody.length);
 
@@ -39,8 +39,8 @@ public class DynamicFileHandler implements HttpRequestHandler {
         return new HttpResponse(startLine, header, responseBody);
     }
 
-    private String getDynamicFileContent(HttpRequest httpRequest, Config config) {
-        String staticContent = getStaticFileContent(httpRequest, config);
+    private String getDynamicFileContent(HttpRequest httpRequest) {
+        String staticContent = getStaticFileContent(httpRequest);
 
         String replacement = "<ul class=\"header__menu\">\n" +
                 "    <li class=\"header__menu__item\">\n" +
@@ -56,9 +56,9 @@ public class DynamicFileHandler implements HttpRequestHandler {
         return staticContent.replaceFirst(pattern, replacement);
     }
 
-    private String getStaticFileContent(HttpRequest httpRequest, Config config) {
+    private String getStaticFileContent(HttpRequest httpRequest) {
 
-        File file = new File(config.getStaticRoute() + httpRequest.getRequestLine());
+        File file = new File(Config.getStaticRoute() + httpRequest.getRequestLine());
 
         // 404 error
         if (!file.exists() || !file.isFile()) {

@@ -21,15 +21,13 @@ import webserver.utils.HeaderUtils;
 
 public class HttpRequestReader {
     private static final String NONE = "";
-    private static final String POST = "POST";
-    private static final String GET = "GET";
     private static final Logger logger = LoggerFactory.getLogger(HttpRequestReader.class);
 
     private BufferedReader br;
 
-    public HttpRequestReader(InputStream in, Config config) {
+    public HttpRequestReader(InputStream in) {
         try {
-            this.br = new BufferedReader(new InputStreamReader(in, config.getEncoding()));
+            this.br = new BufferedReader(new InputStreamReader(in, Config.getEncoding()));
         } catch (UnsupportedEncodingException e) {
             logger.error("[ERROR] 지원되지 않는 인코딩 에러 발생");
             this.br = new BufferedReader(new InputStreamReader(in));

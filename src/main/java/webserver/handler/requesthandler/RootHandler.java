@@ -14,10 +14,10 @@ public class RootHandler implements HttpRequestHandler {
     private static final String DEFAULT_FILE = "index.html";
 
     @Override
-    public HttpResponse handleRequest(HttpRequest httpRequest, Config config) {
+    public HttpResponse handleRequest(HttpRequest httpRequest) {
         switch (httpRequest.getMethod()) {
             case GET -> {
-                return handleGet(httpRequest, config);
+                return handleGet(httpRequest);
             }
             default -> {
                 return HttpResponseUtils.get404Response();  // GET 요쳥이 아닌 경우
@@ -25,14 +25,14 @@ public class RootHandler implements HttpRequestHandler {
         }
     }
 
-    private HttpResponse handleGet(HttpRequest httpRequest, Config config) {
+    private HttpResponse handleGet(HttpRequest httpRequest) {
         httpRequest = HttpRequestUtils.convertToStaticFileRequest(httpRequest);
         if (isLoggedIn(httpRequest)) {
             DynamicFileHandler dynamicFileHandler = new DynamicFileHandler();
-            return dynamicFileHandler.handleRequest(httpRequest, config);
+            return dynamicFileHandler.handleRequest(httpRequest);
         }
         StaticFileHandler staticFileHandler = new StaticFileHandler();
-        return staticFileHandler.handleRequest(httpRequest, config);
+        return staticFileHandler.handleRequest(httpRequest);
     }
 
     private boolean isLoggedIn(HttpRequest httpRequest) {
@@ -42,6 +42,7 @@ public class RootHandler implements HttpRequestHandler {
         }
 
         String cookie = httpRequest.getHeaderValue(COOKIE);
+
         try {
             String sid = SidUtils.getCookieSid(cookie);
             return isValidSid(sid);

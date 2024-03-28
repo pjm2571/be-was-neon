@@ -5,5 +5,5 @@ import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
 
 public interface HttpRequestHandler {
-    HttpResponse handleRequest(HttpRequest httpRequest, Config config);
+    HttpResponse handleRequest(HttpRequest httpRequest);
 }

@@ -8,7 +8,7 @@ import webserver.utils.HttpResponseUtils;
 
 public class ErrorHandler implements HttpRequestHandler {
     @Override
-    public HttpResponse handleRequest(HttpRequest httpRequest, Config config) {
+    public HttpResponse handleRequest(HttpRequest httpRequest) {
         return HttpResponseUtils.get404Response();
     }
 }

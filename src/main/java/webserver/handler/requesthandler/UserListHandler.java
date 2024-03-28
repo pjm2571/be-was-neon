@@ -20,10 +20,10 @@ public class UserListHandler implements HttpRequestHandler {
     private static final String COOKIE = "Cookie";
 
     @Override
-    public HttpResponse handleRequest(HttpRequest httpRequest, Config config) {
+    public HttpResponse handleRequest(HttpRequest httpRequest) {
         switch (httpRequest.getMethod()) {
             case GET -> {
-                return handleGet(httpRequest, config);
+                return handleGet(httpRequest);
             }
             default -> {
                 return HttpResponseUtils.get404Response();  // GET 요쳥이 아닌 경우
@@ -31,10 +31,10 @@ public class UserListHandler implements HttpRequestHandler {
         }
     }
 
-    private HttpResponse handleGet(HttpRequest httpRequest, Config config) {
+    private HttpResponse handleGet(HttpRequest httpRequest) {
         httpRequest = HttpRequestUtils.convertToStaticFileRequest(httpRequest);
         if (isLoggedIn(httpRequest)) {
-            return generateDynamicFileResponse(httpRequest, config);
+            return generateDynamicFileResponse(httpRequest);
         }
         String startLine = HttpResponseUtils.generateResponseStartLine(StatusCode.FOUND);
         String header = HttpResponseUtils.generateRedirectResponseHeader(ROOT_URL);
@@ -55,8 +55,8 @@ public class UserListHandler implements HttpRequestHandler {
         return SessionStore.sessionIdExists(sid);
     }
 
-    private HttpResponse generateDynamicFileResponse(HttpRequest httpRequest, Config config) {
-        byte[] responseBody = getDynamicFileContent(httpRequest, config).getBytes();
+    private HttpResponse generateDynamicFileResponse(HttpRequest httpRequest) {
+        byte[] responseBody = getDynamicFileContent(httpRequest).getBytes();
         // 3) header 작성하기
         String header = HttpResponseUtils.generateStaticResponseHeader(httpRequest, responseBody.length);
 
@@ -67,8 +67,8 @@ public class UserListHandler implements HttpRequestHandler {
         return new HttpResponse(startLine, header, responseBody);
     }
 
-    private String getDynamicFileContent(HttpRequest httpRequest, Config config) {
-        String staticContent = getStaticFileContent(httpRequest, config);
+    private String getDynamicFileContent(HttpRequest httpRequest) {
+        String staticContent = getStaticFileContent(httpRequest);
 
         String replacement = getAllUser();
 
@@ -86,9 +86,9 @@ public class UserListHandler implements HttpRequestHandler {
         return joiner.toString();
     }
 
-    private String getStaticFileContent(HttpRequest httpRequest, Config config) {
+    private String getStaticFileContent(HttpRequest httpRequest) {
 
-        File file = new File(config.getStaticRoute() + httpRequest.getRequestLine());
+        File file = new File(Config.getStaticRoute() + httpRequest.getRequestLine());
 
         // 404 error
         if (!file.exists() || !file.isFile()) {

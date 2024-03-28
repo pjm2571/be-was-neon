@@ -20,10 +20,10 @@ public class LogoutHandler implements HttpRequestHandler {
     private static final String SPACE = " ";
 
     @Override
-    public HttpResponse handleRequest(HttpRequest httpRequest, Config config) {
+    public HttpResponse handleRequest(HttpRequest httpRequest) {
         switch (httpRequest.getMethod()) {
             case GET -> {
-                return handleGet(httpRequest, config);
+                return handleGet(httpRequest);
             }
             default -> {
                 return HttpResponseUtils.get404Response();  // GET 요쳥이 아닌 경우
@@ -31,7 +31,7 @@ public class LogoutHandler implements HttpRequestHandler {
         }
     }
 
-    private HttpResponse handleGet(HttpRequest httpRequest, Config config) {
+    private HttpResponse handleGet(HttpRequest httpRequest) {
         String header = HttpResponseUtils.generateRedirectResponseHeader(ROOT_URL);
         String startLine = HttpResponseUtils.generateResponseStartLine(StatusCode.FOUND);
         try {

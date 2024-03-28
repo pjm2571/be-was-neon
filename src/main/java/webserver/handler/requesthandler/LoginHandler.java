@@ -24,10 +24,10 @@ public class LoginHandler implements HttpRequestHandler {
     private static final String LOGIN_FAIL_URL = "/user/login_failed/index.html";
 
     @Override
-    public HttpResponse handleRequest(HttpRequest httpRequest, Config config) {
+    public HttpResponse handleRequest(HttpRequest httpRequest) {
         switch (httpRequest.getMethod()) {
             case GET -> {
-                return handleGet(httpRequest, config);
+                return handleGet(httpRequest);
             }
             case POST -> {
                 return handlePost(httpRequest);
@@ -39,10 +39,10 @@ public class LoginHandler implements HttpRequestHandler {
     }
 
     // GET 요청
-    private HttpResponse handleGet(HttpRequest httpRequest, Config config) {
+    private HttpResponse handleGet(HttpRequest httpRequest) {
         httpRequest = HttpRequestUtils.convertToStaticFileRequest(httpRequest);
         StaticFileHandler staticFileHandler = new StaticFileHandler();
-        return staticFileHandler.handleRequest(httpRequest, config);
+        return staticFileHandler.handleRequest(httpRequest);
     }
 
 

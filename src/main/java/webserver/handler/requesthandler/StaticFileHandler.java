@@ -18,9 +18,9 @@ public class StaticFileHandler implements HttpRequestHandler {
     private static final Logger logger = LoggerFactory.getLogger(StaticFileHandler.class);
 
     @Override
-    public HttpResponse handleRequest(HttpRequest httpRequest, Config config) {
+    public HttpResponse handleRequest(HttpRequest httpRequest) {
         try {
-            return generateStaticFileResponse(httpRequest, config);
+            return generateStaticFileResponse(httpRequest);
         } catch (IllegalArgumentException e) {
             logger.error(e.getMessage());
             return HttpResponseUtils.get404Response(); // 파일을 못찾으면 404 처리
@@ -30,12 +30,12 @@ public class StaticFileHandler implements HttpRequestHandler {
         }
     }
 
-    private HttpResponse generateStaticFileResponse(HttpRequest httpRequest, Config config) {
+    private HttpResponse generateStaticFileResponse(HttpRequest httpRequest) {
         validateMimeType(httpRequest.getRequestLine());
 
         // 2) 파일 읽기 -> 없다면 IllegalArgumentException [404]
         //            -> 읽다가 예외 발생 시 RuntimeException [500]
-        byte[] responseBody = HttpResponseUtils.generateStaticResponseBody(httpRequest, config);
+        byte[] responseBody = HttpResponseUtils.generateStaticResponseBody(httpRequest);
 
         // 3) header 작성하기
         String header = HttpResponseUtils.generateStaticResponseHeader(httpRequest, responseBody.length);

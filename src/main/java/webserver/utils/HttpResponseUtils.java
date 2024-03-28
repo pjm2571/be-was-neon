@@ -15,8 +15,8 @@ public class HttpResponseUtils {
     private static final String HTTP_VERSION = "HTTP/1.1";
 
 
-    public static byte[] generateStaticResponseBody(HttpRequest httpRequest, Config config) {
-        File file = new File(config.getStaticRoute() + httpRequest.getRequestLine());
+    public static byte[] generateStaticResponseBody(HttpRequest httpRequest) {
+        File file = new File(Config.getStaticRoute() + httpRequest.getRequestLine());
 
         // 404 error
         if (!file.exists() || !file.isFile()) {
