@@ -11,53 +11,36 @@ import webserver.utils.HttpResponseUtils;
 
 import java.io.*;
 
-public class DynamicFileHandler implements HttpRequestHandler {
+public class DynamicFileHandler {
     private static final Logger logger = LoggerFactory.getLogger(DynamicFileHandler.class);
 
-    @Override
-    public HttpResponse handleRequest(HttpRequest httpRequest) {
+    private HttpRequest httpRequest;
+
+    public DynamicFileHandler(HttpRequest httpRequest) {
+        this.httpRequest = httpRequest;
+    }
+
+    public HttpResponse handleRequest(String replacement, String pattern) {
         try {
-            return generateDynamicFileResponse(httpRequest);
+            byte[] responseBody = getDynamicFileContent(replacement, pattern).getBytes();
+            String header = HttpResponseUtils.generateStaticResponseHeader(httpRequest, responseBody.length);
+            String startLine = HttpResponseUtils.generateResponseStartLine(StatusCode.OK);
+            return new HttpResponse(startLine, header, responseBody);
         } catch (IllegalArgumentException e) {
             logger.error(e.getMessage());
-            return HttpResponseUtils.get404Response(); // 파일을 못찾으면 404 처리
+            return HttpResponseUtils.get404Response();
         } catch (RuntimeException e) {
             logger.error(e.getMessage());
-            return HttpResponseUtils.get500Response(); // 서버 오류 500 처리
+            return HttpResponseUtils.get500Response();
         }
     }
 
-    private HttpResponse generateDynamicFileResponse(HttpRequest httpRequest) {
-        byte[] responseBody = getDynamicFileContent(httpRequest).getBytes();
-        // 3) header 작성하기
-        String header = HttpResponseUtils.generateStaticResponseHeader(httpRequest, responseBody.length);
-
-        // 4) startLine 작성하기
-        String startLine = HttpResponseUtils.generateResponseStartLine(StatusCode.OK);
-
-        // 5) response 객체 리턴
-        return new HttpResponse(startLine, header, responseBody);
-    }
-
-    private String getDynamicFileContent(HttpRequest httpRequest) {
+    private String getDynamicFileContent(String replacement, String pattern) {
         String staticContent = getStaticFileContent(httpRequest);
-
-        String replacement = "<ul class=\"header__menu\">\n" +
-                "    <li class=\"header__menu__item\">\n" +
-                "        <a class=\"btn btn_contained btn_size_s\" href=\"/article\">글쓰기</a>\n" +
-                "    </li>\n" +
-                "    <li class=\"header__menu__item\">\n" +
-                "        <button id=\"logout-btn\" class=\"btn btn_ghost btn_size_s\" onclick=\"window.location.href='/logout'\">로그아웃</button>\n" +
-                "    </li>\n" +
-                "</ul>";
-
-        String pattern = "<ul(?:\\s+class=\"[^\"]*\")?>[\\s\\S]*?</ul>";
-
         return staticContent.replaceFirst(pattern, replacement);
     }
 
     private String getStaticFileContent(HttpRequest httpRequest) {
-
         File file = new File(Config.getStaticRoute() + httpRequest.getRequestLine());
 
         // 404 error
@@ -78,5 +61,6 @@ public class DynamicFileHandler implements HttpRequestHandler {
             throw new RuntimeException("[500 ERROR] 읽는 도중 문제 발생 ");
         }
     }
+
 
 }

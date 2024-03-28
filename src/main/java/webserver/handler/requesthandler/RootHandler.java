@@ -13,6 +13,17 @@ public class RootHandler implements HttpRequestHandler {
     private static final String COOKIE = "Cookie";
     private static final String DEFAULT_FILE = "index.html";
 
+    private static final String REPLACEMENT = "<ul class=\"header__menu\">\n" +
+            "    <li class=\"header__menu__item\">\n" +
+            "        <a class=\"btn btn_contained btn_size_s\" href=\"/article\">글쓰기</a>\n" +
+            "    </li>\n" +
+            "    <li class=\"header__menu__item\">\n" +
+            "        <button id=\"logout-btn\" class=\"btn btn_ghost btn_size_s\" onclick=\"window.location.href='/logout'\">로그아웃</button>\n" +
+            "    </li>\n" +
+            "</ul>";
+
+    private static final String PATTERN = "<ul(?:\\s+class=\"[^\"]*\")?>[\\s\\S]*?</ul>";
+
     @Override
     public HttpResponse handleRequest(HttpRequest httpRequest) {
         switch (httpRequest.getMethod()) {
@@ -28,8 +39,8 @@ public class RootHandler implements HttpRequestHandler {
     private HttpResponse handleGet(HttpRequest httpRequest) {
         httpRequest = HttpRequestUtils.convertToStaticFileRequest(httpRequest);
         if (isLoggedIn(httpRequest)) {
-            DynamicFileHandler dynamicFileHandler = new DynamicFileHandler();
-            return dynamicFileHandler.handleRequest(httpRequest);
+            DynamicFileHandler dynamicFileHandler = new DynamicFileHandler(httpRequest);
+            return dynamicFileHandler.handleRequest(REPLACEMENT, PATTERN);
         }
         StaticFileHandler staticFileHandler = new StaticFileHandler();
         return staticFileHandler.handleRequest(httpRequest);
