@@ -1,6 +1,5 @@
 package webserver.handler.requesthandler;
 
-import config.Config;
 import db.SessionStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,8 +7,8 @@ import webserver.StatusCode;
 import webserver.handler.HttpRequestHandler;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
+import webserver.sid.SidValidator;
 import webserver.utils.HttpResponseUtils;
-import webserver.utils.SidUtils;
 
 public class LogoutHandler implements HttpRequestHandler {
     private static final Logger logger = LoggerFactory.getLogger(LogoutHandler.class);
@@ -35,7 +34,7 @@ public class LogoutHandler implements HttpRequestHandler {
         String header = HttpResponseUtils.generateRedirectResponseHeader(ROOT_URL);
         String startLine = HttpResponseUtils.generateResponseStartLine(StatusCode.FOUND);
         try {
-            String sid = getSid(httpRequest);
+            String sid = SidValidator.getCookieSid(httpRequest);
             String expireSid = getExpireSid(sid);
             SessionStore.expireSid(sid);
             header = HttpResponseUtils.setCookieHeader(header, expireSid);
@@ -43,14 +42,6 @@ public class LogoutHandler implements HttpRequestHandler {
             logger.error(e.getMessage());
         }
         return new HttpResponse(startLine, header);
-    }
-
-    private String getSid(HttpRequest httpRequest) {
-        String cookie = httpRequest.getHeaderValue(COOKIE);
-        if (cookie == null) {
-            throw new IllegalArgumentException("[ERROR] 쿠키가 없습니다.");
-        }
-        return SidUtils.getCookieSid(cookie);
     }
 
     private String getExpireSid(String sid) {
