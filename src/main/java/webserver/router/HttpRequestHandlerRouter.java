@@ -9,6 +9,7 @@ public class HttpRequestHandlerRouter {
     private static final String LOGIN = "/login";
     private static final String LOGOUT = "/logout";
     private static final String USER_LIST = "/user/list";
+    private static final String ARTICLE = "/article";
     private static final String ROOT = "/";
 
     public HttpRequestHandler getRequestHandler(HttpRequest httpRequest) {
@@ -26,6 +27,7 @@ public class HttpRequestHandlerRouter {
             case LOGIN -> new LoginHandler();
             case LOGOUT -> new LogoutHandler();
             case USER_LIST -> new UserListHandler();
+            case ARTICLE -> new ArticleHandler();
             default -> new ErrorHandler();
         };
     }
