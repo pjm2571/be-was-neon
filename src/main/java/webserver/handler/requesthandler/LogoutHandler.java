@@ -21,8 +21,8 @@ public class LogoutHandler implements HttpRequestHandler {
     @Override
     public HttpResponse handleRequest(HttpRequest httpRequest) {
         switch (httpRequest.getMethod()) {
-            case GET -> {
-                return handleGet(httpRequest);
+            case POST -> {
+                return handlePost(httpRequest);
             }
             default -> {
                 return HttpResponseUtils.get404Response();  // GET 요쳥이 아닌 경우
@@ -30,7 +30,7 @@ public class LogoutHandler implements HttpRequestHandler {
         }
     }
 
-    private HttpResponse handleGet(HttpRequest httpRequest) {
+    private HttpResponse handlePost(HttpRequest httpRequest) {
         String header = HttpResponseUtils.generateRedirectResponseHeader(ROOT_URL);
         String startLine = HttpResponseUtils.generateResponseStartLine(StatusCode.FOUND);
         try {

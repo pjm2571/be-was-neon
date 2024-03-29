@@ -47,12 +47,14 @@ public class RootHandler implements HttpRequestHandler {
     private String getReplacement(String userName) {
 
         return "<ul class=\"header__menu\">\n" +
-                "<li class=\"user-name\">" + userName + "</li>\n" +
+                "    <li class=\"user-name\">" + userName + "</li>\n" +
                 "    <li class=\"header__menu__item\">\n" +
                 "        <a class=\"btn btn_contained btn_size_s\" href=\"/article\">글쓰기</a>\n" +
                 "    </li>\n" +
                 "    <li class=\"header__menu__item\">\n" +
-                "        <button id=\"logout-btn\" class=\"btn btn_ghost btn_size_s\" onclick=\"window.location.href='/logout'\">로그아웃</button>\n" +
+                "        <form id=\"logout-form\" action=\"/logout\" method=\"post\">\n" +
+                "            <button type=\"submit\" class=\"btn btn_ghost btn_size_s\">로그아웃</button>\n" +
+                "        </form>\n" +
                 "    </li>\n" +
                 "</ul>";
     }
