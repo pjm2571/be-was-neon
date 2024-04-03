@@ -1,13 +1,13 @@
 package webserver.http.request.message;
 
 public class HttpRequestBody {
-    private String body;
+    private byte[] body;
 
-    public HttpRequestBody(String body) {
+    public HttpRequestBody(byte[] body) {
         this.body = body;
     }
 
-    public String getBody() {
+    public byte[] getBody() {
         return body;
     }
 }

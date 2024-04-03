@@ -2,7 +2,6 @@ package webserver.handler.requesthandler;
 
 import webserver.StatusCode;
 import webserver.handler.HttpRequestHandler;
-import webserver.handler.inputhandler.ArticleInputHandler;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
 import webserver.sid.SidValidator;
@@ -40,9 +39,6 @@ public class ArticleHandler implements HttpRequestHandler {
     }
 
     private HttpResponse handlePost(HttpRequest httpRequest) {
-        ArticleInputHandler articleInputHandler = new ArticleInputHandler(httpRequest);
-
-
         return HttpResponseUtils.get500Response();
     }
 

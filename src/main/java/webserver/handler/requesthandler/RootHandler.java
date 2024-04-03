@@ -51,6 +51,9 @@ public class RootHandler implements HttpRequestHandler {
                 "    <li class=\"header__menu__item\">\n" +
                 "        <a class=\"btn btn_contained btn_size_s\" href=\"/article\">글쓰기</a>\n" +
                 "    </li>\n" +
+                "<li class=\"header__menu__item\">\n" +
+                "            <a class=\"btn btn_userlist btn_size_s\" href=\"/user/list\">유저 리스트</a>\n" +
+                "          </li>"+
                 "    <li class=\"header__menu__item\">\n" +
                 "        <form id=\"logout-form\" action=\"/logout\" method=\"post\">\n" +
                 "            <button type=\"submit\" class=\"btn btn_ghost btn_size_s\">로그아웃</button>\n" +

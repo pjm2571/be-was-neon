@@ -41,7 +41,7 @@ public class HttpRequest {
         return header.getValue(key);
     }
 
-    public String getBody() {
+    public byte[] getBody() {
         return body.getBody();
     }
 

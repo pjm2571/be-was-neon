@@ -20,23 +20,22 @@ import webserver.http.request.message.HttpRequestStartLine;
 import webserver.utils.HeaderUtils;
 
 public class HttpRequestReader {
-    private static final String NONE = "";
+    private static final byte[] NONE = new byte[0];
     private static final Logger logger = LoggerFactory.getLogger(HttpRequestReader.class);
+    private static final char CR = '\r';
+    private static final char LF = '\n';
+    private static final int END_OF_LINE = -1;
+    private static final int BUFFER_SIZE = 1024;
 
-    private BufferedReader br;
+    private BufferedInputStream bis;
 
     public HttpRequestReader(InputStream in) {
-        try {
-            this.br = new BufferedReader(new InputStreamReader(in, Config.getEncoding()));
-        } catch (UnsupportedEncodingException e) {
-            logger.error("[ERROR] 지원되지 않는 인코딩 에러 발생");
-            this.br = new BufferedReader(new InputStreamReader(in));
-        }
+        bis = new BufferedInputStream(in);
     }
 
 
     public HttpRequest getRequest() throws IOException {
-        HttpRequestStartLine startLine = new HttpRequestStartLine(br.readLine());
+        HttpRequestStartLine startLine = new HttpRequestStartLine(readLine());
 
         HttpRequestHeader header = new HttpRequestHeader(readHeader());
 
@@ -47,26 +46,45 @@ public class HttpRequestReader {
     private Map<String, String> readHeader() throws IOException {
         Map<String, String> headers = new LinkedHashMap<>();
 
-        StringBuilder headerLine = new StringBuilder(br.readLine());
+        StringBuilder headerLine = new StringBuilder(readLine());
         while (!headerLine.toString().isEmpty()) {
             headers.put(HeaderUtils.getHeaderKey(headerLine.toString()), HeaderUtils.getHeaderValue(headerLine.toString()));
-            headerLine.replace(0, headerLine.length(), NONE);
-            headerLine.append(br.readLine());
+            headerLine.replace(0, headerLine.length(), "");
+            headerLine.append(readLine());
         }
-
         return headers;
     }
 
-    private String readBody(HttpRequestStartLine startLine, HttpRequestHeader header) throws IOException {
+    private byte[] readBody(HttpRequestStartLine startLine, HttpRequestHeader header) throws IOException {
         if (startLine.getHttpMethod().equals(HttpMethod.GET)) {
             return NONE;
         }
+        int contentLength = Integer.parseInt(header.getValue("Content-Length"));
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] buffer = new byte[BUFFER_SIZE];
+        int bytesRead;
+        int totalBytesRead = 0;
 
-        int length = Integer.parseInt(header.getValue("Content-Length"));
+        while (totalBytesRead < contentLength &&
+                (bytesRead = bis.read(buffer, 0, Math.min(BUFFER_SIZE, contentLength - totalBytesRead))) != END_OF_LINE) {
+            baos.write(buffer, 0, bytesRead);
+            totalBytesRead += bytesRead;
+        }
+        return baos.toByteArray();
+    }
 
-        char[] body = new char[length];
-        br.read(body, 0, length);
-        return new String(body);
+    private String readLine() throws IOException {
+        StringBuilder line = new StringBuilder();
+        int character;
+        while ((character = bis.read()) != END_OF_LINE) {
+            if (character == LF) {
+                break;
+            }
+            if (character != CR) {
+                line.append((char) character);
+            }
+        }
+        return line.toString();
     }
 
 
