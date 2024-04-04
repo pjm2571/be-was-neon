@@ -32,8 +32,8 @@ public class ArticleHandler implements HttpRequestHandler {
             = Pattern.compile("^ *Content-Disposition: *form-data; *name=\"content\"");
     private static final Pattern IMAGE_PATTERN
             = Pattern.compile("^ *Content-Disposition: *form-data; *name=\"image\"; *filename=\"(.*?)\"");
-    private static final String DIRECTORY_PATH = "src/main/java/db/images/";
-
+    private static final String DIRECTORY_PATH = "./src/main/resources/static/db/";
+    private static final String IMG_PATH = "./db/";
 
     @Override
     public HttpResponse handleRequest(HttpRequest httpRequest) {
@@ -66,7 +66,11 @@ public class ArticleHandler implements HttpRequestHandler {
         Article article = generateArticle(httpRequest.getBody(), userId);
         logger.debug("article : {}", article);
         ArticleDataBase.addArticle(article);
-        return HttpResponseUtils.get500Response();
+
+        String startLine = HttpResponseUtils.generateResponseStartLine(StatusCode.FOUND);
+        String header = HttpResponseUtils.generateRedirectResponseHeader("/");
+        return new HttpResponse(startLine, header);
+//        return HttpResponseUtils.get500Response();
     }
 
     private Article generateArticle(byte[] requestBody, String userId) {
@@ -104,7 +108,7 @@ public class ArticleHandler implements HttpRequestHandler {
                 }
             }
         }
-        String filePath = DIRECTORY_PATH + imageName;
+        String filePath = IMG_PATH + imageName;
         return new Article(userId, content, filePath);
     }
 

@@ -9,6 +9,19 @@ public class Article {
         this.userId = userId;
         this.content = content;
         this.img_path = img_path;
+        System.out.println(img_path);
+    }
+
+    public String getImgPath() {
+        return img_path;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public String getContent() {
+        return content;
     }
 
     @Override
