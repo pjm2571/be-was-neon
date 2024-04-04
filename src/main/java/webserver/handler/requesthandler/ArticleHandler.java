@@ -104,7 +104,8 @@ public class ArticleHandler implements HttpRequestHandler {
                 }
             }
         }
-        return new Article(userId, content, imageName);
+        String filePath = DIRECTORY_PATH + imageName;
+        return new Article(userId, content, filePath);
     }
 
 
