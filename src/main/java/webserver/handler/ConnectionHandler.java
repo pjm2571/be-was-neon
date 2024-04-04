@@ -51,6 +51,7 @@ public class ConnectionHandler implements Runnable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (IllegalArgumentException e) {
+            logger.error(e.getMessage());
             return;
         }
     }

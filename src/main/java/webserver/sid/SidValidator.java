@@ -1,12 +1,14 @@
 package webserver.sid;
 
 import db.SessionStore;
+import model.User;
 import webserver.http.request.HttpRequest;
 
 public class SidValidator {
     private static final String COOKIE = "Cookie";
     private static final String SID_START_LINE = "sid=";
     private static final String DEFAULT_FILE = "index.html";
+
     public static boolean isLoggedIn(HttpRequest httpRequest) {
         // index.html 파일만 다룬다.
         if (!isDefaultFile(httpRequest)) {
@@ -42,5 +44,11 @@ public class SidValidator {
         startIndex += SID_START_LINE.length();
 
         return cookie.substring(startIndex);
+    }
+
+    public static String getUserId(HttpRequest httpRequest) {
+        String sid = getCookieSid(httpRequest);
+        User user = SessionStore.getUserBySid(sid);
+        return user.getUserId();
     }
 }

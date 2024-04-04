@@ -1,7 +1,11 @@
 package webserver.handler.requesthandler;
 
+import db.ArticleDataBase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import webserver.StatusCode;
 import webserver.handler.HttpRequestHandler;
+import webserver.handler.inputhandler.Article;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
 import webserver.sid.SidValidator;
@@ -9,13 +13,27 @@ import webserver.utils.HttpRequestUtils;
 import webserver.utils.HttpResponseUtils;
 
 import java.io.*;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.StringJoiner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ArticleHandler implements HttpRequestHandler {
+
+    private static final Logger logger = LoggerFactory.getLogger(ArticleHandler.class);
     private static final String REDIRECT_URL = "/";
-    private static final String LINE_SEPARATOR = "\n";
+
+    private static final String BOUNDARY_REGEX = "^------WebKitFormBoundary.*$";
+    private static final Pattern CONTENT_PATTERN
+            = Pattern.compile("^ *Content-Disposition: *form-data; *name=\"content\"");
+    private static final Pattern IMAGE_PATTERN
+            = Pattern.compile("^ *Content-Disposition: *form-data; *name=\"image\"; *filename=\"(.*?)\"");
+    private static final String DIRECTORY_PATH = "src/main/java/db/images/";
+
 
     @Override
     public HttpResponse handleRequest(HttpRequest httpRequest) {
@@ -44,58 +62,96 @@ public class ArticleHandler implements HttpRequestHandler {
     }
 
     private HttpResponse handlePost(HttpRequest httpRequest) {
-        InputStreamReader reader = new InputStreamReader(new ByteArrayInputStream(httpRequest.getBody()));
-        String boundary = getBoundary(httpRequest.getHeaderValue("Content-Type"));
-
-        try {
-            String line = readLine(reader);
-            if (line.equals(boundary)) {
-                StringJoiner sj = new StringJoiner(LINE_SEPARATOR);
-                while (!(line = readLine(reader)).equals(boundary)) {
-                    if (!line.isEmpty()) {
-                        sj.add(line);
-                    }
-                }
-                System.out.println(sj.toString());
-            }
-
-            // 이제 시작
-            System.out.println(readLine(reader));
-            System.out.println(readLine(reader));
-            System.out.println(readLine(reader));
-
-            // body를 읽자!
-
-            System.out.println(readLine(reader));
-
-        } catch (IOException e) {
-            e.getMessage();
-            return HttpResponseUtils.get500Response();
-        }
-
+        String userId = SidValidator.getUserId(httpRequest);
+        Article article = generateArticle(httpRequest.getBody(), userId);
+        logger.debug("article : {}", article);
+        ArticleDataBase.addArticle(article);
         return HttpResponseUtils.get500Response();
     }
 
-    private String getBoundary(String contentType) {
-        String boundarySubstr = "boundary=";
-        int boundaryIndex = contentType.indexOf(boundarySubstr);
-        String boundary = contentType.substring(boundaryIndex + boundarySubstr.length());
-        return "--" + boundary;
-    }
+    private Article generateArticle(byte[] requestBody, String userId) {
+        String content = "";
+        String imageName = "";
 
-    private String readLine(InputStreamReader reader) throws IOException {
-        StringBuilder line = new StringBuilder();
-        int character;
-        while ((character = reader.read()) != -1) {
-            if (character == '\n') {
-                break;
-            }
-            if (character != '\r') {
-                line.append((char) character);
+        int start = 0;
+
+        while (start < requestBody.length) {    // 모든 request Body를 읽을 때 까지 동작
+            int end = getEndOfByteLine(start, requestBody); // end 포인트를 찾는다 '\n' 까지 찾는다
+            String convertedStr = convertByteToStr(requestBody, start, end); // 한 줄을 String으로 변환한다.
+            start = end + 1;    // 다음 줄을 읽도록 start Index를 옮긴다
+
+            if (convertedStr.matches(BOUNDARY_REGEX)) { // 변환한 String이 Boundary Regex와 일치한다면
+                end = getEndOfByteLine(start, requestBody); // 옮긴 시작점부터 시작해서 \n이 나타날 때 까지의 index를 가져온다.
+                String contentInfo = convertByteToStr(requestBody, start, end); // contentInfo = start부터 개행문자 전까지의 값을 가져온다
+                start = end + 1;    // CRLF 를 넘긴다
+
+                Matcher contentMatcher = CONTENT_PATTERN.matcher(contentInfo);
+                if (contentMatcher.find()) {    // Content-Pattern과 일치한다면
+                    start += 2; // content-skip (1) ,  CRLF-skip (2) 이므로 +2를 해준다.
+                    end = getEndOfContent(start, requestBody);
+                    content = convertByteToStr(requestBody, start, end);
+                }
+
+                Matcher imageMatcher = IMAGE_PATTERN.matcher(contentInfo);
+                if (imageMatcher.find()) {
+                    start += 2;
+                    end = getEndOfByteLine(start, requestBody);
+
+                    imageName = decodeStr(imageMatcher.group(1));
+                    byte[] image = Arrays.copyOfRange(requestBody, end + 3, requestBody.length - 2);
+                    generateFile(imageName, image);
+                    break;
+                }
             }
         }
-        return line.toString();
+        return new Article(userId, content, imageName);
     }
 
+
+    private int getEndOfContent(int start, byte[] requestBody) {
+        int lineEnd = getEndOfByteLine(start, requestBody);
+        int contentEnd = lineEnd;
+
+        String line = convertByteToStr(requestBody, start, lineEnd);
+        while (!line.matches(BOUNDARY_REGEX)) {
+            contentEnd = lineEnd;
+            start = lineEnd + 1;
+            lineEnd = getEndOfByteLine(start, requestBody);
+            line = convertByteToStr(requestBody, start, lineEnd);
+        }
+        return contentEnd;
+    }
+
+
+    private void generateFile(String imageName, byte[] image) {
+        String filePath = DIRECTORY_PATH + imageName; // 파일 경로 및 이름을 지정
+
+        try (FileOutputStream fos = new FileOutputStream(filePath)) {
+            fos.write(image);
+            logger.debug("이미지 파일이 성공적으로 생성되었습니다.");
+        } catch (IOException e) {
+            logger.error("파일 생성 중 오류가 발생했습니다: " + e.getMessage());
+        }
+    }
+
+    private String decodeStr(String matches) {
+        return URLDecoder.decode(matches, StandardCharsets.UTF_8);
+    }
+
+    private String convertByteToStr(byte[] requestBody, int start, int end) {
+        byte[] copyByte = Arrays.copyOfRange(requestBody, start, end - 1);
+        return new String(copyByte, StandardCharsets.UTF_8);
+    }
+
+    private int getEndOfByteLine(int start, byte[] requestBody) {
+        int end = requestBody.length;
+        for (int index = start; index < requestBody.length; index++) {
+            if (requestBody[index] == '\n') {
+                end = index;
+                break;
+            }
+        }
+        return end;
+    }
 
 }
