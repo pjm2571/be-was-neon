@@ -1,6 +1,6 @@
 package db;
 
-import webserver.handler.inputhandler.Article;
+import model.Article;
 
 import java.util.LinkedList;
 import java.util.List;

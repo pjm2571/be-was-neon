@@ -4,7 +4,7 @@ import db.ArticleDataBase;
 import db.SessionStore;
 import model.User;
 import webserver.handler.HttpRequestHandler;
-import webserver.handler.inputhandler.Article;
+import model.Article;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
 import webserver.sid.SidValidator;

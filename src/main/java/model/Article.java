@@ -1,4 +1,4 @@
-package webserver.handler.inputhandler;
+package model;
 
 public class Article {
     private String userId;
