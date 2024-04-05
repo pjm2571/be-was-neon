@@ -1,6 +1,7 @@
 package webserver.utils;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -13,8 +14,8 @@ public class QueryUtils {
 
     public static Map<String, String> getQueries(byte[] requestBody) {
         String queryLine;
-        try {   // nio를 사용하지 않기 위해 try-catch로 작성
-            queryLine = new String(requestBody, ENCODING);
+        try {
+            queryLine = URLDecoder.decode(new String(requestBody), ENCODING);
         } catch (UnsupportedEncodingException e) {
             queryLine = new String(requestBody);
         }
@@ -22,6 +23,4 @@ public class QueryUtils {
                 .map(pair -> pair.split(QUERY_SEPARATOR))
                 .collect(Collectors.toMap(pair -> pair[0], pair -> pair[1]));
     }
-
-
 }

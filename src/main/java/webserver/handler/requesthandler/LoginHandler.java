@@ -2,6 +2,7 @@ package webserver.handler.requesthandler;
 
 import config.Config;
 import db.Database;
+import db.H2.UserDatabase;
 import db.SessionStore;
 import model.User;
 import org.slf4j.Logger;
@@ -68,7 +69,7 @@ public class LoginHandler implements HttpRequestHandler {
         String inputId = queries.get("userId");
         String inputPassword = queries.get("password");
 
-        User user = Database.findUserById(inputId);
+        User user = UserDatabase.findUserById(inputId);
 
         validateUser(user, inputId, inputPassword); // 유저 정보 확인
 
