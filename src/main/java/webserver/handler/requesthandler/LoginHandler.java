@@ -1,9 +1,8 @@
 package webserver.handler.requesthandler;
 
-import config.Config;
-import db.Database;
 import db.H2.UserDatabase;
 import db.SessionStore;
+import db.manager.UserDatabaseManager;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +68,7 @@ public class LoginHandler implements HttpRequestHandler {
         String inputId = queries.get("userId");
         String inputPassword = queries.get("password");
 
-        User user = UserDatabase.findUserById(inputId);
+        User user = UserDatabaseManager.findUserById_DB(inputId);
 
         validateUser(user, inputId, inputPassword); // 유저 정보 확인
 

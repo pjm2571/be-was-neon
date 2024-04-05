@@ -1,8 +1,7 @@
 package webserver.handler.requesthandler;
 
-import db.Database;
 import db.H2.UserDatabase;
-import db.SessionStore;
+import db.manager.UserDatabaseManager;
 import model.User;
 import webserver.StatusCode;
 import webserver.handler.HttpRequestHandler;
@@ -48,7 +47,7 @@ public class UserListHandler implements HttpRequestHandler {
 
     private String getAllUser() {
         StringJoiner joiner = new StringJoiner("\n");
-        for (User user : UserDatabase.findAll()) {
+        for (User user : UserDatabaseManager.findAll_DB()) {
             joiner.add("<li>" + user.getName() + "</li>");
         }
         return joiner.toString();

@@ -1,8 +1,7 @@
 package webserver.handler.requesthandler;
 
-import db.ArticleDataBase;
-import db.H2.ArticleDatabase;
 import db.SessionStore;
+import db.manager.ArticleDatabaseManager;
 import model.User;
 import webserver.handler.HttpRequestHandler;
 import model.Article;
@@ -78,7 +77,7 @@ public class RootHandler implements HttpRequestHandler {
 
     private String getArticles() {
         StringBuilder sb = new StringBuilder();
-        Map<Integer, Article> articles = ArticleDatabase.getArticles();
+        Map<Integer, Article> articles = ArticleDatabaseManager.getArticlesDB();
         List<Article> articleList = new ArrayList<>(articles.values());
 
         // 리스트를 역순으로 정렬
