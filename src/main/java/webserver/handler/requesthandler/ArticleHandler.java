@@ -1,6 +1,6 @@
 package webserver.handler.requesthandler;
 
-import db.ArticleDataBase;
+import db.H2.ArticleDatabase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.StatusCode;
@@ -62,7 +62,7 @@ public class ArticleHandler implements HttpRequestHandler {
         String userId = SidValidator.getUserId(httpRequest);
         Article article = generateArticle(httpRequest.getBody(), userId);
         logger.debug("article : {}", article);
-        ArticleDataBase.addArticle(article);
+        ArticleDatabase.addArticle(article);
 
         String startLine = HttpResponseUtils.generateResponseStartLine(StatusCode.FOUND);
         String header = HttpResponseUtils.generateRedirectResponseHeader("/");

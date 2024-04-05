@@ -1,6 +1,7 @@
 package webserver.handler.requesthandler;
 
 import db.ArticleDataBase;
+import db.H2.ArticleDatabase;
 import db.SessionStore;
 import model.User;
 import webserver.handler.HttpRequestHandler;
@@ -11,7 +12,10 @@ import webserver.sid.SidValidator;
 import webserver.utils.HttpRequestUtils;
 import webserver.utils.HttpResponseUtils;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class RootHandler implements HttpRequestHandler {
     private static final String PATTERN = "<header(?:\\s+class=\"[^\"]*\")?>[\\s\\S]*?</header>[\\s\\S]*?<div class=\"wrapper\">";
@@ -74,9 +78,14 @@ public class RootHandler implements HttpRequestHandler {
 
     private String getArticles() {
         StringBuilder sb = new StringBuilder();
-        List<Article> articles = ArticleDataBase.getArticles();
-        for (int i = articles.size() - 1; i >= 0; i--) {
-            Article article = articles.get(i);
+        Map<Integer, Article> articles = ArticleDatabase.getArticles();
+        List<Article> articleList = new ArrayList<>(articles.values());
+
+        // 리스트를 역순으로 정렬
+        Collections.reverse(articleList);
+
+        // 역순으로 정렬된 리스트를 반복하여 문자열에 추가
+        for (Article article : articleList) {
             sb.append(getArticleContent(article));
         }
         return sb.toString();
