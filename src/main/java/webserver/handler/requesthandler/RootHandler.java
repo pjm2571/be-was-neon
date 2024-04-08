@@ -1,19 +1,24 @@
 package webserver.handler.requesthandler;
 
-import config.Config;
 import db.SessionStore;
+import db.manager.ArticleDatabaseManager;
 import model.User;
 import webserver.handler.HttpRequestHandler;
+import model.Article;
 import webserver.http.request.HttpRequest;
 import webserver.http.response.HttpResponse;
+import webserver.sid.SidValidator;
 import webserver.utils.HttpRequestUtils;
 import webserver.utils.HttpResponseUtils;
-import webserver.utils.SidUtils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 public class RootHandler implements HttpRequestHandler {
-    private static final String COOKIE = "Cookie";
-    private static final String DEFAULT_FILE = "index.html";
-    private static final String PATTERN = "<ul(?:\\s+class=\"[^\"]*\")?>[\\s\\S]*?</ul>";
+    private static final String PATTERN = "<header(?:\\s+class=\"[^\"]*\")?>[\\s\\S]*?</header>[\\s\\S]*?<div class=\"wrapper\">";
+
 
     @Override
     public HttpResponse handleRequest(HttpRequest httpRequest) {
@@ -29,57 +34,88 @@ public class RootHandler implements HttpRequestHandler {
 
     private HttpResponse handleGet(HttpRequest httpRequest) {
         httpRequest = HttpRequestUtils.convertToStaticFileRequest(httpRequest);
-        if (isLoggedIn(httpRequest)) {
+        if (SidValidator.isLoggedIn(httpRequest)) {
             DynamicFileHandler dynamicFileHandler = new DynamicFileHandler(httpRequest);
             String userName = getUserName(httpRequest);
             String replacement = getReplacement(userName);
+
+            replacement += getArticles();
+
             return dynamicFileHandler.handleRequest(replacement, PATTERN);
         }
         StaticFileHandler staticFileHandler = new StaticFileHandler();
         return staticFileHandler.handleRequest(httpRequest);
     }
 
-    private boolean isLoggedIn(HttpRequest httpRequest) {
-        // index.html 파일에 대해서만 응답!
-        if (!isDefaultFile(httpRequest)) {
-            return false;
-        }
-
-        String cookie = httpRequest.getHeaderValue(COOKIE);
-
-        try {
-            String sid = SidUtils.getCookieSid(cookie);
-            return isValidSid(sid);
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
-    }
-
-    private boolean isValidSid(String sid) {
-        return SessionStore.sessionIdExists(sid);
-    }
-
-    private boolean isDefaultFile(HttpRequest httpRequest) {
-        return httpRequest.getRequestLine().endsWith(DEFAULT_FILE);
-    }
-
     private String getUserName(HttpRequest httpRequest) {
-        String cookie = httpRequest.getHeaderValue(COOKIE);
-        String sid = SidUtils.getCookieSid(cookie);
+        String sid = SidValidator.getCookieSid(httpRequest);
         User user = SessionStore.getUserBySid(sid);
         return user.getName();
     }
 
     private String getReplacement(String userName) {
 
-        return "<ul class=\"header__menu\">\n" +
-                "<li class=\"user-name\">" + userName + "</li>\n" +
+        return "<header class=\"header\">\n" +
+                "<a href=\"/\"><img src=\"./img/signiture.svg\"></a>\n" +
+                "<ul class=\"header__menu\">\n" +
+                "    <li class=\"user-name\">" + userName + "</li>\n" +
                 "    <li class=\"header__menu__item\">\n" +
                 "        <a class=\"btn btn_contained btn_size_s\" href=\"/article\">글쓰기</a>\n" +
                 "    </li>\n" +
+                "<li class=\"header__menu__item\">\n" +
+                "            <a class=\"btn btn_userlist btn_size_s\" href=\"/user/list\">유저 리스트</a>\n" +
+                "          </li>" +
                 "    <li class=\"header__menu__item\">\n" +
-                "        <button id=\"logout-btn\" class=\"btn btn_ghost btn_size_s\" onclick=\"window.location.href='/logout'\">로그아웃</button>\n" +
+                "        <form id=\"logout-form\" action=\"/logout\" method=\"post\">\n" +
+                "            <button type=\"submit\" class=\"btn btn_ghost btn_size_s\">로그아웃</button>\n" +
+                "        </form>\n" +
                 "    </li>\n" +
-                "</ul>";
+                "</ul>\n" +
+                "</header>\n" +
+                "<div class=\"wrapper\">\n";
+    }
+
+    private String getArticles() {
+        StringBuilder sb = new StringBuilder();
+        Map<Integer, Article> articles = ArticleDatabaseManager.getArticlesDB();
+        List<Article> articleList = new ArrayList<>(articles.values());
+
+        // 리스트를 역순으로 정렬
+        Collections.reverse(articleList);
+
+        // 역순으로 정렬된 리스트를 반복하여 문자열에 추가
+        for (Article article : articleList) {
+            sb.append(getArticleContent(article));
+        }
+        return sb.toString();
+    }
+
+    private String getArticleContent(Article article) {
+        return "<div class=\"post\">\n" +
+                "<div class=\"post__account\">\n" +
+                "    <img class=\"post__account__img\">\n" +
+                "    <p class=\"post__account__nickname\">" + article.getUserId() + "</p>\n" +
+                "  </div>\n" +
+                "  <img class=\"post__img\" src=\"" + article.getImgPath() + "\">\n" +
+                "  <div class=\"post__menu\">\n" +
+                "    <ul class=\"post__menu__personal\">\n" +
+                "      <li>\n" +
+                "        <button class=\"post__menu__btn\">\n" +
+                "          <img src=\"./img/like.svg\">\n" +
+                "        </button>\n" +
+                "      </li>\n" +
+                "      <li>\n" +
+                "        <button class=\"post__menu__btn\">\n" +
+                "          <img src=\"./img/sendLink.svg\">\n" +
+                "        </button>\n" +
+                "      </li>\n" +
+                "    </ul>\n" +
+                "    <button class=\"post__menu__btn\">\n" +
+                "      <img src=\"./img/bookMark.svg\">\n" +
+                "    </button>\n" +
+                "  </div>\n" +
+                "  <p class=\"post__article\">\n" +
+                "    " + article.getContent() + "\n" +
+                "  </p>\n";
     }
 }

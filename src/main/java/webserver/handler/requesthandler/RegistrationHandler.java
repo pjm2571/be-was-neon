@@ -1,7 +1,7 @@
 package webserver.handler.requesthandler;
 
-import config.Config;
-import db.Database;
+import db.H2.UserDatabase;
+import db.manager.UserDatabaseManager;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +54,7 @@ public class RegistrationHandler implements HttpRequestHandler {
     private void createUser(HttpRequest httpRequest) {
         Map<String, String> queries = QueryUtils.getQueries(httpRequest.getBody());
         User user = new User(queries.get("userId"), queries.get("password"), queries.get("name"), queries.get("email"));
-        Database.addUser(user);
+        UserDatabaseManager.addUser_DB(user);
         logger.debug("user created : {}", user);
     }
 }
