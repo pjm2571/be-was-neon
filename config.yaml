@@ -1,0 +1,4 @@
+
+encoding: UTF-8
+port: 8080
+static_route: ./src/main/resources/static
